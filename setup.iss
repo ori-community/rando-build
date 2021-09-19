@@ -5,7 +5,7 @@
 #define MyAppVersion GetEnv('APP_VERSION')
 #define MyAppPublisher "Mood Studios Community"
 #define MyAppURL "https://wotw.orirando.com/"
-#define MyAppExeName "ori-rando-launcher.exe"
+#define MyAppExeName "Ori and the Will of the Wisps Randomizer.exe"
 #define MyAppAssocName MyAppName + " Seed"
 #define MyAppAssocExt ".wotwr"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt

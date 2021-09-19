@@ -69,7 +69,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: randomizer
-          path: 'C:\moon\randomizer\*'
+          path: |
+            C:\moon\randomizer\*
+            !C:\moon\randomizer\*.pdb
           retention-days: 1
   
 
