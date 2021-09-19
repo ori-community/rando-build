@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Ori and the Will of the Wisps Randomizer"
-#define MyAppVersion "{#GetEnv('APP_VERSION')}"
+#define MyAppVersion GetEnv('APP_VERSION')
 #define MyAppPublisher "Mood Studios Community"
 #define MyAppURL "https://wotw.orirando.com/"
 #define MyAppExeName "ori-rando-launcher.exe"

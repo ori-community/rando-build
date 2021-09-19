@@ -195,7 +195,8 @@ jobs:
 
       - name: Build installer
         run: |
-          APP_VERSION=${{ github.event.inputs.release_version || 'dev' }} iscc /O"output" /F"WotwRandoSetup" setup.idd
+          $env:APP_VERSION = "${{ github.event.inputs.release_version || 'dev' }}"
+          & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' /O"output" /F"WotwRandoSetup" setup.iss
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
