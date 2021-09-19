@@ -24,11 +24,11 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
-LicenseFile=C:\Users\Timo\ori-build\LICENSE.txt
+LicenseFile=.\LICENSE.txt
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputBaseFilename=OriRandoSetup
-SetupIconFile=C:\Users\Timo\ori-build\WotwRando.ico
+SetupIconFile=.\WotwRando.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
