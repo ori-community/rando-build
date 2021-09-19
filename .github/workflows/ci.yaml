@@ -139,7 +139,7 @@ jobs:
 
       - name: Generate client
         run: |
-          API_HOST=${{ github.event.inputs.api_host || 'wotw.orirando.com' }} API_SECURE=true IS_ELECTRON=true yarn generate
+          API_HOST=${{ github.event.inputs.api_host || 'dev.wotw.orirando.com' }} API_SECURE=true IS_ELECTRON=true yarn generate
           cp -fr ./dist/* ./electron/public/
       - name: Build electron
         working-directory: ./electron
