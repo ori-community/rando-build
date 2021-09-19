@@ -1,0 +1,243 @@
+name: Build WotW Rando
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version (leave empty to build only)'     
+        required: false
+        default: ''
+      api_host:
+        description: 'Server Host'     
+        required: true
+        default: 'wotw.orirando.com'
+      ui_branch:
+        description: 'UI branch'     
+        required: true
+        default: 'main'
+
+jobs:
+  meta:
+    runs-on: ubuntu-latest
+    outputs:
+      branch: ${{ steps.get_branch.outputs.branch }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get Branch
+        id: get_branch
+        run: |
+          branch=$(git branch -r --contains ${{ github.ref }} | grep -oP 'origin/\K\w+' | tail -1)
+          echo branch=$branch
+          echo ref=${{ github.ref }}
+          echo ::set-output name=branch::$branch
+  build_randomizer:
+    runs-on: windows-2019
+    needs: meta
+    steps:
+      - name: Set up directories
+        run: "md -Path 'C:\\moon\\randomizer'"
+      - name: Clone sparkle-preference/OriWotwRandomizerClient
+        run: |
+          git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
+      - name: Install MSVC developer tools
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "12.0.1"
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.2
+      - name: Generate solution
+        shell: cmd
+        run: "gen_win64_vs2019.bat"
+      - name: Compile Wotw Rando
+        shell: cmd
+        run: |
+          msbuild -t:CMakePredefinedTargets\INSTALL_RUNTIME -p:Configuration=RelWithDebInfo -p:Platform=x64 build\win64\WotWRandomizer.sln
+          IF ERRORLEVEL 1 (
+            echo BUILD FAILED
+            exit 1
+          )
+      - name: Write version file
+        shell: bash
+        run: |
+          echo Writing version file...
+          (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > VERSION
+          cp -f VERSION /c/moon/randomizer/VERSION
+      - name: Compiling AHK scripts
+        shell: cmd
+        timeout-minutes: 1
+        run: |
+          ".\ext\ahk\Ahk2Exe.exe" /silent /verbose /in ".\projects/AutoTracker/OriAutoTracker.ahk" /icon ".\WotwRando.ico" /out "C:\moon\ItemTracker.exe" > error.txt
+          type error.txt
+      - name: Archive randomizer
+        uses: actions/upload-artifact@v2
+        with:
+          name: randomizer
+          path: 'C:\moon\randomizer\*'
+          retention-days: 1
+  
+
+  build_seedgen:
+    runs-on: windows-2019
+    steps:
+      - name: Clone sparkle-preference/OriWotwRandomizerClient
+        run: |
+          git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
+      - name: Setup Rust
+        uses: ATiltedTree/setup-rust@v1
+        with:
+          rust-version: stable
+      - name: Build Seedgen
+        shell: cmd
+        run: |
+          cd projects/SeedgenCli
+          cargo build --release
+          echo Copying seedgen.exe
+          copy ".\target\release\seedgen.exe" "C:\seedgen\seedgen.exe"
+          echo Zipping headers_presets.zip
+          C:\ProgramData\Chocolatey\bin\7z.exe a -tzip C:\seedgen\headers_presets.zip headers presets
+          echo Copying loc_data.csv
+          copy ".\loc_data.csv" "C:\seedgen\loc_data.csv" /Y
+          echo Copying state_data.csv
+          copy ".\state_data.csv" "C:\seedgen\state_data.csv" /Y
+          echo Copying areas.wotw
+          copy ".\areas.wotw" "C:\seedgen\areas.wotw" /Y
+      - name: Archive seedgen
+        uses: actions/upload-artifact@v2
+        with:
+          name: seedgen
+          path: 'C:\seedgen\*'
+          retention-days: 1
+
+
+  build_launcher:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone ori-rando/ui
+        run: |
+          git clone --branch ${{ github.event.inputs.ui_branch || 'dev' }} --depth 1 https://github.com/ori-rando/ui .
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14
+          check-latest: true
+      
+      - name: Get yarn cache directory path 🛠
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.4
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      
+      - name: Install dependencies 👨🏻‍💻
+        run: yarn install
+
+      - name: Generate client
+        run: |
+          API_HOST=${{ github.event.inputs.api_host || 'wotw.orirando.com' }} API_SECURE=true IS_ELECTRON=true yarn generate
+          cp -fr ./dist/* ./electron/public/
+      - name: Build electron
+        working-directory: ./electron
+        run: |
+          yarn install
+          yarn electron:build -w
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: launcher
+          retention-days: 1
+          path: |
+            ./electron/dist_electron/win-unpacked/*
+
+
+  build_installer:
+    runs-on: windows-2019
+    needs: [build_randomizer, build_seedgen, build_launcher]
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install Inno setup
+        run: |
+          Invoke-WebRequest -Uri "https://mlaan2.home.xs4all.nl/ispack/innosetup-6.2.0.exe" -OutFile innosetup.exe
+          if ((Get-FileHash innosetup.exe).Hash -eq "2459DA3C0A67346BC43A9732D96929877D04F53B1D4C56E61BE64E3B5F34D5CF") {
+            innosetup.exe /VERYSILENT /LOG=innosetup.log
+            Get-Content innosetup.log
+          } else {
+            echo "Inno Setup hash verification failed"
+            exit 1
+          }
+
+      - name: Set up directories
+        run: "md -Path 'C:\\moon\\randomizer'"
+      
+      - name: Download launcher
+        uses: actions/download-artifact@v2
+        with:
+          name: launcher
+          path: "C:\\moon\\"
+      - name: Download randomizer
+        uses: actions/download-artifact@v2
+        with:
+          name: randomizer
+          path: "C:\\moon\\randomizer\\"
+      - name: Download seedgen
+        uses: actions/download-artifact@v2
+        with:
+          name: seedgen
+          path: "C:\\moon\\randomizer\\"
+
+      - name: Build installer
+        run: |
+          APP_VERSION=${{ github.event.inputs.release_version || 'dev' }} iscc /O"output" /F"WotwRandoSetup" setup.idd
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: installer
+          retention-days: 1
+          path: |
+            .\output\WotwRandoSetup.exe
+
+      - name: Create draft release
+        if: ${{ github.event.inputs.release_version != '' }}
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: TODO
+          draft: true
+          prerelease: false
+      - name: Release WotwRandoSetup.exe
+        if: ${{ github.event.inputs.release_version != '' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: '.\output\WotwRandoSetup.exe'
+          asset_name: WotwRandoSetup.exe
+          asset_content_type: application/octet-stream
