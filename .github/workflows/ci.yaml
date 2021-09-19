@@ -77,6 +77,12 @@ jobs:
             C:\moon\randomizer\*
             !C:\moon\randomizer\*.pdb
           retention-days: 1
+      - name: Archive PDBs
+        uses: actions/upload-artifact@v2
+        with:
+          name: randomizer
+          path: |
+            C:\moon\randomizer\*.pdb
   
 
   build_seedgen:
