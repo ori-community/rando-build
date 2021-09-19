@@ -20,25 +20,8 @@ on:
         default: 'main'
 
 jobs:
-  meta:
-    runs-on: ubuntu-latest
-    outputs:
-      branch: ${{ steps.get_branch.outputs.branch }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Get Branch
-        id: get_branch
-        run: |
-          branch=$(git branch -r --contains ${{ github.ref }} | grep -oP 'origin/\K\w+' | tail -1)
-          echo branch=$branch
-          echo ref=${{ github.ref }}
-          echo ::set-output name=branch::$branch
   build_randomizer:
     runs-on: windows-2019
-    needs: meta
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\moon\\randomizer'"
