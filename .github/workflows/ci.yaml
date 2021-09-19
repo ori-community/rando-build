@@ -80,7 +80,7 @@ jobs:
       - name: Archive PDBs
         uses: actions/upload-artifact@v2
         with:
-          name: randomizer
+          name: pdb
           path: |
             C:\moon\randomizer\*.pdb
   
