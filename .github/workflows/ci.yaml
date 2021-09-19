@@ -78,6 +78,8 @@ jobs:
   build_seedgen:
     runs-on: windows-2019
     steps:
+      - name: Set up directories
+        run: "md -Path 'C:\\seedgen'"
       - name: Clone sparkle-preference/OriWotwRandomizerClient
         run: |
           git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
