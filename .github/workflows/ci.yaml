@@ -65,6 +65,10 @@ jobs:
         run: |
           ".\ext\ahk\Ahk2Exe.exe" /silent /verbose /in ".\projects/AutoTracker/OriAutoTracker.ahk" /icon ".\WotwRando.ico" /out "C:\moon\ItemTracker.exe" > error.txt
           type error.txt
+      - name: Copy modloader_config.json
+        shell: cmd
+        run: |
+          copy modloader_config.json C:\moon\randomizer\modloader_config.json
       - name: Archive randomizer
         uses: actions/upload-artifact@v2
         with:
