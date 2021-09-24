@@ -153,9 +153,9 @@ jobs:
 
       - name: Generate client
         run: |
-          $env:API_HOST = ${{ github.event.inputs.api_host || 'dev.wotw.orirando.com' }}
-          $env:API_SECURE=true
-          $env:IS_ELECTRON=true
+          $env:API_HOST = "${{ github.event.inputs.api_host || 'dev.wotw.orirando.com' }}"
+          $env:API_SECURE = "true"
+          $env:IS_ELECTRON = "true"
           yarn generate
           copy .\dist\* .\electron\public\
       - name: Build electron
