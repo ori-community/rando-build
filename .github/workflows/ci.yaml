@@ -121,7 +121,7 @@ jobs:
 
 
   build_launcher:
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
     steps:
       - name: Clone ori-rando/ui
         run: |
@@ -135,7 +135,9 @@ jobs:
       
       - name: Get yarn cache directory path 🛠
         id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
+        run: |
+          $cachePath = @(yarn cache dir)
+          echo "::set-output name=dir::${cachePath}"
 
       - name: Cache node_modules 📦
         uses: actions/cache@v2.1.4
@@ -151,14 +153,14 @@ jobs:
 
       - name: Generate client
         run: |
-          API_HOST=${{ github.event.inputs.api_host || 'dev.wotw.orirando.com' }} API_SECURE=true IS_ELECTRON=true yarn generate
-          cp -fr ./dist/* ./electron/public/
+          $env:API_HOST = ${{ github.event.inputs.api_host || 'dev.wotw.orirando.com' }}
+          $env:API_SECURE=true
+          $env:IS_ELECTRON=true
+          yarn generate
+          copy .\dist\* .\electron\public\
       - name: Build electron
-        working-directory: ./electron
+        working-directory: .\\electron
         run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-get update -y
-          sudo apt-get install wine wine32 -y
           yarn install
           yarn electron:build -w
       - name: Archive artifacts
@@ -167,7 +169,7 @@ jobs:
           name: launcher
           retention-days: 1
           path: |
-            ./electron/dist_electron/win-unpacked/*
+            .\electron\dist_electron\win-unpacked\*
 
 
   render_credits:
