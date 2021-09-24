@@ -170,9 +170,50 @@ jobs:
             ./electron/dist_electron/win-unpacked/*
 
 
+  render_credits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone ori-rando/credits
+        run: |
+          git clone --depth 1 https://github.com/ori-rando/credits .
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14
+          check-latest: true
+      
+      - name: Get yarn cache directory path 🛠
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.4
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      
+      - name: Install dependencies 👨🏻‍💻
+        run: yarn install
+
+      - name: Render credits
+        run: yarn generate
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: credits
+          retention-days: 1
+          path: |
+            ./credits
+
+
   build_installer:
     runs-on: windows-2019
-    needs: [build_randomizer, build_seedgen, build_launcher]
+    needs: [build_randomizer, build_seedgen, build_launcher, render_credits]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -206,6 +247,11 @@ jobs:
         with:
           name: seedgen
           path: "C:\\moon\\randomizer\\"
+      - name: Download credits
+        uses: actions/download-artifact@v2
+        with:
+          name: credits
+          path: "C:\\moon\\randomizer\\"
 
       - name: Build installer
         run: |
@@ -216,7 +262,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: installer
-          retention-days: 1
+          retention-days: 7
           path: |
             .\output\WotwRandoSetup.exe
 
