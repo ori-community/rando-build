@@ -28,6 +28,7 @@ jobs:
       - name: Clone sparkle-preference/OriWotwRandomizerClient
         run: |
           git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
+          git rev-parse HEAD > C:\moon\randomizer\client.revision
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -63,7 +64,7 @@ jobs:
         shell: cmd
         timeout-minutes: 1
         run: |
-          ".\ext\ahk\Ahk2Exe.exe" /silent /verbose /in ".\projects/AutoTracker/OriAutoTracker.ahk" /icon ".\WotwRando.ico" /out "C:\moon\ItemTracker.exe" > error.txt
+          ".\ext\ahk\Ahk2Exe.exe" /silent /verbose /in ".\projects/AutoTracker/OriAutoTracker.ahk" /icon ".\WotwRando.ico" /out "C:\moon\randomizer\ItemTracker.exe" > error.txt
           type error.txt
       - name: Copy modloader_config.json
         shell: cmd
@@ -93,6 +94,7 @@ jobs:
       - name: Clone sparkle-preference/OriWotwRandomizerClient
         run: |
           git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
+          git rev-parse HEAD > C:\seedgen\seedgen.revision
       - name: Setup Rust
         uses: ATiltedTree/setup-rust@v1
         with:
@@ -163,6 +165,10 @@ jobs:
         run: |
           yarn install
           yarn electron:build -w
+      - name: Write Git revision
+        run: |
+          md -Path '.\electron\dist_electron\win-unpacked\randomizer'
+          git rev-parse HEAD > .\electron\dist_electron\win-unpacked\randomizer\launcher.revision
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -178,6 +184,7 @@ jobs:
       - name: Clone ori-rando/credits
         run: |
           git clone --depth 1 https://github.com/ori-rando/credits .
+          git rev-parse HEAD > credits.revision
 
       - name: Setup node env 🏗
         uses: actions/setup-node@v2.1.5
@@ -211,6 +218,7 @@ jobs:
           retention-days: 1
           path: |
             ./credits
+            ./credits.revision
 
 
   build_installer:
