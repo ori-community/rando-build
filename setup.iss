@@ -62,7 +62,7 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChang
 function NextButtonClick(PageId: Integer): Boolean;
 begin
     Result := True;
-    if (PageId = wpSelectDir) and FileExists(ExpandConstant('{app}\WotwRando.exe')) then begin
+    if (PageId = wpSelectDir) and (FileExists(ExpandConstant('{app}\WotwRando.exe')) or FileExists(ExpandConstant('{app}\..\WotwRando.exe'))) then begin
         MsgBox('Unfortunately, it is not possible to install the new version to the same directory as before. It is recommended to install it to the default location. We will automatically import your settings if you updated from the old version.', mbError, MB_OK);
         Result := False;
         exit;
