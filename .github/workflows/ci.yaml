@@ -159,7 +159,7 @@ jobs:
           $env:API_SECURE = "true"
           $env:IS_ELECTRON = "true"
           yarn generate
-          copy .\dist\* .\electron\public\
+          Copy-item -Force -Recurse -Verbose ".\dist\*" -Destination ".\electron\public\"
       - name: Build electron
         working-directory: .\\electron
         run: |
