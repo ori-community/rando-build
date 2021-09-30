@@ -29,8 +29,11 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
           git rev-parse HEAD > C:\moon\randomizer\client.revision
+      - name: Clone ori-rando/assets
+        run: |
           git clone --depth 1 https://github.com/ori-rando/assets.git assets
           git -C assets rev-parse HEAD > C:\moon\randomizer\assets.revision
+          git -C assets lfs checkout
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
         with:
