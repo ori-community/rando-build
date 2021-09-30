@@ -29,14 +29,12 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
           git rev-parse HEAD > C:\moon\randomizer\client.revision
+          git clone --depth 1 https://github.com/ori-rando/assets.git assets
+          git -C assets rev-parse HEAD > C:\moon\randomizer\assets.revision
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
-      # - name: Install LLVM and Clang
-      #   uses: KyleMayes/install-llvm-action@v1
-      #   with:
-      #     version: "12.0.1"
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
