@@ -76,7 +76,7 @@ jobs:
         with:
           name: randomizer
           path: |
-            C:\moon\randomizer\*
+            C:\moon\randomizer\**\*
             !C:\moon\randomizer\*.pdb
           retention-days: 1
       - name: Archive PDBs
