@@ -56,6 +56,10 @@ jobs:
           echo Writing version file...
           (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > VERSION
           cp -f VERSION /c/moon/randomizer/VERSION
+      - name: Write Run ID
+        shell: bash
+        run: |
+          echo -n "${{ github.run_id }}" > /c/moon/randomizer/run_id
       - name: Compiling AHK scripts
         shell: cmd
         timeout-minutes: 1
