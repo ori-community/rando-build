@@ -108,8 +108,9 @@ jobs:
           cargo build --release
           echo Copying seedgen.exe
           copy ".\target\release\seedgen.exe" "C:\seedgen\seedgen.exe"
-          echo Zipping headers_presets.zip
-          C:\ProgramData\Chocolatey\bin\7z.exe a -tzip C:\seedgen\headers_presets.zip headers presets
+          echo Copying headers and presets
+          xcopy /E headers C:\seedgen\headers\
+          xcopy /E presets C:\seedgen\presets\
           echo Copying loc_data.csv
           copy ".\loc_data.csv" "C:\seedgen\loc_data.csv" /Y
           echo Copying state_data.csv
