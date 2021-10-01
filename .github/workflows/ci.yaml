@@ -69,8 +69,8 @@ jobs:
       - name: Clone ori-rando/assets
         run: |
           git clone --depth 1 https://github.com/ori-rando/assets.git C:\moon\randomizer\assets
-          git -C assets rev-parse HEAD > C:\moon\randomizer\assets.revision
-          git -C assets lfs checkout
+          git -C C:\moon\randomizer\assets rev-parse HEAD > C:\moon\randomizer\assets.revision
+          git -C C:\moon\randomizer\assets lfs checkout
           Remove-Item -Path C:\moon\randomizer\assets\.git -Force -Recurse
       - name: Archive randomizer
         uses: actions/upload-artifact@v2
