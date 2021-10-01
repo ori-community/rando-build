@@ -71,7 +71,7 @@ jobs:
           git clone --depth 1 https://github.com/ori-rando/assets.git C:\moon\randomizer\assets
           git -C assets rev-parse HEAD > C:\moon\randomizer\assets.revision
           git -C assets lfs checkout
-          rmdir /s /q C:\moon\randomizer\assets\.git
+          Remove-Item -Path C:\moon\randomizer\assets\.git -Force -Recurse
       - name: Archive randomizer
         uses: actions/upload-artifact@v2
         with:
@@ -109,8 +109,8 @@ jobs:
           echo Copying seedgen.exe
           copy ".\target\release\seedgen.exe" "C:\seedgen\seedgen.exe"
           echo Copying headers and presets
-          xcopy /E headers C:\seedgen\headers\
-          xcopy /E presets C:\seedgen\presets\
+          Copy-Item -Path headers -Recurse -Destination C:\seedgen\headers\
+          Copy-Item -Path presets -Recurse -Destination C:\seedgen\presets\
           echo Copying loc_data.csv
           copy ".\loc_data.csv" "C:\seedgen\loc_data.csv" /Y
           echo Copying state_data.csv
