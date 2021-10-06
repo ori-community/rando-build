@@ -125,7 +125,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: seedgen
-          path: 'C:\seedgen\*'
+          path: 'C:\seedgen\**\*'
           retention-days: 1
 
 
