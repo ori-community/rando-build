@@ -106,7 +106,7 @@ jobs:
         with:
           rust-version: stable
       - name: Build Seedgen
-        shell: cmd
+        shell: powershell
         run: |
           cd projects/SeedgenCli
           cargo build --release
