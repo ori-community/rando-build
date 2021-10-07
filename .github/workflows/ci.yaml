@@ -111,16 +111,16 @@ jobs:
           cd projects/SeedgenCli
           cargo build --release
           echo Copying seedgen.exe
-          copy ".\target\release\seedgen.exe" "C:\seedgen\seedgen.exe"
+          Copy-Item -Path ".\target\release\seedgen.exe" -Destination "C:\seedgen\seedgen.exe"
           echo Copying headers and presets
           Copy-Item -Path headers -Recurse -Destination C:\seedgen\headers\
           Copy-Item -Path presets -Recurse -Destination C:\seedgen\presets\
           echo Copying loc_data.csv
-          copy ".\loc_data.csv" "C:\seedgen\loc_data.csv" /Y
+          Copy-Item -Path ".\loc_data.csv" -Destination "C:\seedgen\loc_data.csv"
           echo Copying state_data.csv
-          copy ".\state_data.csv" "C:\seedgen\state_data.csv" /Y
+          Copy-Item -Path ".\state_data.csv" -Destination "C:\seedgen\state_data.csv"
           echo Copying areas.wotw
-          copy ".\areas.wotw" "C:\seedgen\areas.wotw" /Y
+          Copy-Item -Path ".\areas.wotw" -Destination "C:\seedgen\areas.wotw"
       - name: Archive seedgen
         uses: actions/upload-artifact@v2
         with:
