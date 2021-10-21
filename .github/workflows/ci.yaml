@@ -25,9 +25,9 @@ jobs:
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\moon\\randomizer'"
-      - name: Clone sparkle-preference/OriWotwRandomizerClient
+      - name: Clone ori-rando/wotw-client
         run: |
-          git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
+          git clone --depth 1 https://github.com/ori-rando/wotw-client.git .
           git rev-parse HEAD > C:\moon\randomizer\client.revision
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
@@ -97,9 +97,9 @@ jobs:
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\seedgen'"
-      - name: Clone sparkle-preference/OriWotwRandomizerClient
+      - name: Clone ori-rando/wotw-seedgen
         run: |
-          git clone --depth 1 https://github.com/sparkle-preference/OriWotwRandomizerClient.git .
+          git clone --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
           git rev-parse HEAD > C:\seedgen\seedgen.revision
       - name: Setup Rust
         uses: ATiltedTree/setup-rust@v1
@@ -108,7 +108,6 @@ jobs:
       - name: Build Seedgen
         shell: powershell
         run: |
-          cd projects/SeedgenCli
           cargo build --release
           echo Copying seedgen.exe
           Copy-Item -Path ".\target\release\seedgen.exe" -Destination "C:\seedgen\seedgen.exe"
