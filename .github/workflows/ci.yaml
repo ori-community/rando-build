@@ -10,12 +10,8 @@ on:
         description: 'Release version (leave empty to build only)'     
         required: false
         default: ''
-      api_host:
-        description: 'Server Host'     
-        required: true
-        default: 'wotw.orirando.com'
       ui_branch:
-        description: 'UI branch'     
+        description: 'UI branch'
         required: true
         default: 'main'
 
@@ -161,7 +157,6 @@ jobs:
 
       - name: Generate client
         run: |
-          $env:API_HOST = "${{ github.event.inputs.api_host || 'dev.wotw.orirando.com' }}"
           $env:API_SECURE = "true"
           $env:IS_ELECTRON = "true"
           yarn generate
