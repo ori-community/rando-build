@@ -10,6 +10,10 @@ on:
         description: 'Release version (leave empty to build only)'     
         required: false
         default: ''
+      client_branch:
+        description: 'Client branch'
+        required: true
+        default: 'main'
       ui_branch:
         description: 'UI branch'
         required: true
@@ -23,7 +27,7 @@ jobs:
         run: "md -Path 'C:\\moon\\randomizer'"
       - name: Clone ori-rando/wotw-client
         run: |
-          git clone --depth 1 https://github.com/ori-rando/wotw-client.git .
+          git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-client.git .
           git rev-parse HEAD > C:\moon\randomizer\client.revision
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
