@@ -34,11 +34,11 @@ jobs:
         with:
           arch: x64
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 5.0.x
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1.1
+        uses: microsoft/setup-msbuild@v1.1
       - name: Generate solution
         shell: cmd
         run: "gen_win64_vs2022.bat"
