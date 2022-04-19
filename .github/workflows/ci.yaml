@@ -21,7 +21,7 @@ on:
 
 jobs:
   build_randomizer:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\moon\\randomizer'"
@@ -93,7 +93,7 @@ jobs:
   
 
   build_seedgen:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\seedgen'"
@@ -129,7 +129,7 @@ jobs:
 
 
   build_launcher:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Clone ori-rando/ui
         run: |
@@ -223,7 +223,7 @@ jobs:
 
 
   build_installer:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [build_randomizer, build_seedgen, build_launcher, render_credits]
     steps:
       - name: Check out repository code
