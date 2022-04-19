@@ -38,10 +38,10 @@ jobs:
         with:
           dotnet-version: 5.0.x
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.1.1
       - name: Generate solution
         shell: cmd
-        run: "gen_win64_vs2019.bat"
+        run: "gen_win64_vs2022.bat"
       - name: Compile Wotw Rando
         shell: cmd
         run: |
