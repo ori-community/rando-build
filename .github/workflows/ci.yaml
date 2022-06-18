@@ -23,6 +23,8 @@ jobs:
   build_randomizer:
     runs-on: windows-2022
     steps:
+      - name: Enable Git support for long file paths
+        run: git config --system core.longpaths true
       - name: Set up directories
         run: "md -Path 'C:\\moon\\randomizer'"
       - name: Clone ori-rando/wotw-client
