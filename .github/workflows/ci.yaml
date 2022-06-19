@@ -47,7 +47,7 @@ jobs:
       - name: Compile Wotw Rando
         shell: cmd
         run: |
-          msbuild -t:CMakePredefinedTargets\INSTALL_RUNTIME -p:Configuration=RelWithDebInfo -p:Platform=x64 build\win64\WotWRandomizer.sln
+          cmake --build .\build --target INSTALL_RUNTIME --config RelWithDebInfo
           IF ERRORLEVEL 1 (
             echo BUILD FAILED
             exit 1
