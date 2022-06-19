@@ -47,7 +47,7 @@ jobs:
       - name: Compile Wotw Rando
         shell: cmd
         run: |
-          cmake --build .\build --target INSTALL_RUNTIME --config RelWithDebInfo
+          cmake --build .\build\win64 --target INSTALL_RUNTIME --config RelWithDebInfo
           IF ERRORLEVEL 1 (
             echo BUILD FAILED
             exit 1
