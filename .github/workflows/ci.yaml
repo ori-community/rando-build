@@ -41,6 +41,11 @@ jobs:
           dotnet-version: 5.0.x
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+      - name: Install Conan
+        id: conan
+        uses: turtlebrowser/get-conan@main
+      - name: Conan version
+        run: echo "${{ steps.conan.outputs.version }}"
       - name: Generate solution
         shell: cmd
         run: "gen_win64_vs2022.bat"
