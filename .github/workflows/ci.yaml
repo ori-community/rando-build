@@ -137,37 +137,26 @@ jobs:
         run: |
           git clone --branch ${{ github.event.inputs.ui_branch || 'dev' }} --depth 1 https://github.com/ori-rando/ui .
 
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
-          check-latest: true
-
-      - name: Cache node_modules 📦
-        uses: actions/cache@v2.1.4
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: |
-            node_modules
-            electron/node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-2
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       
       - name: Install dependencies 👨🏻‍💻
-        run: yarn install
+        run: npm ci
 
       - name: Generate client
         run: |
           $env:API_SECURE = "true"
           $env:IS_ELECTRON = "true"
-          yarn generate
+          npm run generate
           Copy-item -Force -Recurse -Verbose ".\dist\*" -Destination ".\electron\public\"
       - name: Build electron
         working-directory: .\\electron
         run: |
-          yarn install
-          yarn electron:build -w
+          npm ci
+          npm run electron:build -- -w
       - name: Write Git revision
         run: |
           md -Path '.\electron\dist_electron\win-unpacked\randomizer'
@@ -189,30 +178,17 @@ jobs:
           git clone --depth 1 https://github.com/ori-rando/credits .
           git rev-parse HEAD > credits.revision
 
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v3
         with:
-          node-version: 14
-          check-latest: true
-      
-      - name: Get yarn cache directory path 🛠
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Cache node_modules 📦
-        uses: actions/cache@v2.1.4
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version: 16
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       
       - name: Install dependencies 👨🏻‍💻
-        run: yarn install
+        run: npm ci
 
       - name: Render credits
-        run: yarn generate
+        run: npm run generate
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
