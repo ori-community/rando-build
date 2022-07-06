@@ -23,6 +23,12 @@ jobs:
   build_randomizer:
     runs-on: windows-2022
     steps:
+      - name: Cache Conan
+        id: cache-conan
+        uses: actions/cache@v3
+        with:
+          path: "C:\\.conan"
+          key: conan
       - name: Enable Git support for long file paths
         run: git config --system core.longpaths true
       - name: Set up directories
