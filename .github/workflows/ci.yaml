@@ -114,12 +114,19 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
           git rev-parse HEAD > C:\seedgen\seedgen.revision
-      - name: Setup Rust
-        run: "winget install -e --id Rustlang.Rust.MSVC"
-      - name: Build Seedgen
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          components: rustfmt, clippy
+      - name: Build seedgen
+        uses: actions-rs/cargo@v1
+        with:
+          command: build --release
+      - name: Copy artifacts
         shell: powershell
         run: |
-          cargo build --release
           echo Copying seedgen.exe
           Copy-Item -Path ".\target\release\seedgen.exe" -Destination "C:\seedgen\seedgen.exe"
           echo Copying headers and presets
