@@ -114,7 +114,7 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
           git rev-parse HEAD > C:\seedgen\seedgen.revision
-      - name: Install latest nightly
+      - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
