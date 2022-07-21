@@ -115,9 +115,7 @@ jobs:
           git clone --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
           git rev-parse HEAD > C:\seedgen\seedgen.revision
       - name: Setup Rust
-        uses: ATiltedTree/setup-rust@v1
-        with:
-          rust-version: stable
+        run: "winget install -e --id Rustlang.Rust.MSVC"
       - name: Build Seedgen
         shell: powershell
         run: |
