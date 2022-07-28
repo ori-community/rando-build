@@ -157,23 +157,23 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'npm'
+          cache: 'yarn'
           cache-dependency-path: '**/package-lock.json'
       
       - name: Install dependencies 👨🏻‍💻
-        run: npm ci
+        run: yarn install
 
       - name: Generate client
         run: |
           $env:API_SECURE = "true"
           $env:IS_ELECTRON = "true"
-          npm run generate
+          yarn run generate
           Copy-item -Force -Recurse -Verbose ".\dist\*" -Destination ".\electron\public\"
       - name: Build electron
         working-directory: .\\electron
         run: |
-          npm ci
-          npm run electron:build -- -w
+          yarn install
+          yarn run electron:build -- -w
       - name: Write Git revision
         run: |
           md -Path '.\electron\dist_electron\win-unpacked\randomizer'
