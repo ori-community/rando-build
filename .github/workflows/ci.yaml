@@ -26,17 +26,20 @@ on:
 jobs:
   build_randomizer:
     runs-on: windows-2022
+    env:
+      - CONAN_USER_HOME: 'C:\.conan'
     steps:
       - name: Cache Conan
         id: cache-conan
         uses: actions/cache@v3
         with:
-          path: '${{ env.USERPROFILE }}\.conan\data'
+          path: '${{ env.CONAN_USER_HOME }}'
           key: conan
       - name: Enable Git support for long file paths
         run: git config --system core.longpaths true
       - name: Set up directories
-        run: "md -Path 'C:\\moon\\randomizer'"
+        run: |
+          md -Path 'C:\\moon\\randomizer'
       - name: Clone ori-rando/wotw-client
         run: |
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-client.git .
