@@ -27,7 +27,7 @@ jobs:
   build_randomizer:
     runs-on: windows-2022
     env:
-      - CONAN_USER_HOME: 'C:\.conan'
+      CONAN_USER_HOME: 'C:\.conan'
     steps:
       - name: Cache Conan
         id: cache-conan
