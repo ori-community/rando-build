@@ -18,6 +18,10 @@ on:
         description: 'UI branch'
         required: true
         default: 'main'
+      seedgen_branch:
+        description: 'Seedgen branch'
+        required: true
+        default: 'main'
 
 jobs:
   build_randomizer:
@@ -112,7 +116,7 @@ jobs:
         run: "md -Path 'C:\\seedgen'"
       - name: Clone ori-rando/wotw-seedgen
         run: |
-          git clone --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
+          git clone --branch ${{ github.event.inputs.seedgen_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
           git rev-parse HEAD > C:\seedgen\seedgen.revision
       - name: Install Rust
         uses: actions-rs/toolchain@v1
@@ -131,13 +135,13 @@ jobs:
           echo Copying seedgen.exe
           Copy-Item -Path ".\target\release\seedgen.exe" -Destination "C:\seedgen\seedgen.exe"
           echo Copying headers and presets
-          Copy-Item -Path headers -Recurse -Destination C:\seedgen\headers\
-          Copy-Item -Path presets -Recurse -Destination C:\seedgen\presets\
-          echo Copying loc_data.csv
+          Copy-Item -Path wotw_seedgen\headers -Recurse -Destination C:\seedgen\headers\
+          Copy-Item -Path wotw_seedgen\presets -Recurse -Destination C:\seedgen\presets\
+          echo Copying wotw_seedgen\loc_data.csv
           Copy-Item -Path ".\loc_data.csv" -Destination "C:\seedgen\loc_data.csv"
-          echo Copying state_data.csv
+          echo Copying wotw_seedgen\state_data.csv
           Copy-Item -Path ".\state_data.csv" -Destination "C:\seedgen\state_data.csv"
-          echo Copying areas.wotw
+          echo Copying wotw_seedgen\areas.wotw
           Copy-Item -Path ".\areas.wotw" -Destination "C:\seedgen\areas.wotw"
       - name: Archive seedgen
         uses: actions/upload-artifact@v2
