@@ -80,12 +80,6 @@ jobs:
         shell: bash
         run: |
           echo -n "${{ github.run_id }}" > /c/moon/randomizer/run_id
-      - name: Compiling AHK scripts
-        shell: cmd
-        timeout-minutes: 1
-        run: |
-          ".\ext\ahk\Ahk2Exe.exe" /silent /verbose /in ".\projects/AutoTracker/OriAutoTracker.ahk" /icon ".\WotwRando.ico" /out "C:\moon\randomizer\ItemTracker.exe" > error.txt
-          type error.txt
       - name: Copy modloader_config.json
         shell: cmd
         run: |
@@ -139,7 +133,7 @@ jobs:
           Copy-Item -Path ".\target\release\seedgen.exe" -Destination "C:\seedgen\seedgen.exe"
           echo Copying headers and presets
           Copy-Item -Path wotw_seedgen\headers -Recurse -Destination C:\seedgen\headers\
-          Copy-Item -Path wotw_seedgen\presets -Recurse -Destination C:\seedgen\presets\
+          Copy-Item -Path wotw_seedgen\world_presets -Recurse -Destination C:\seedgen\world_presets\
           echo Copying wotw_seedgen\loc_data.csv
           Copy-Item -Path wotw_seedgen\loc_data.csv -Destination "C:\seedgen\loc_data.csv"
           echo Copying wotw_seedgen\state_data.csv
