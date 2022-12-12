@@ -343,7 +343,7 @@ jobs:
 
       - name: Build installer
         run: |
-          tar -zcvf /tmp/WotwRando.tar.gz /tmp/moon/
+          tar -zcvf /tmp/WotwRando.tar.gz -C /tmp/moon /tmp/moon/
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
