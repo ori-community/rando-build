@@ -364,7 +364,7 @@ jobs:
           path: "/tmp/"
       - name: Extract launcher
         run: |
-          tar -zvf -C /tmp/moon /tmp/launcher_linux.tar
+          tar -xvf -C /tmp/moon /tmp/launcher_linux.tar
       - name: Download randomizer
         uses: actions/download-artifact@v2
         with:
@@ -390,7 +390,7 @@ jobs:
       - name: Extract winestreamproxy
         run: |
           mkdir /tmp/winestreamproxy
-          tar -zvf -C /tmp/winestreamproxy /tmp/winestreamproxy.tar
+          tar -xvf -C /tmp/winestreamproxy /tmp/winestreamproxy.tar
       
       - name: Copy winestreamproxy into launcher
         run: |
