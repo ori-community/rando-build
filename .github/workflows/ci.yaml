@@ -182,6 +182,32 @@ jobs:
             .\electron\dist_electron\win-unpacked\*
 
 
+  build_winestreamproxy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone timoschwarzer/winestreamproxy
+        run: |
+          git clone --depth 1 https://github.com/timoschwarzer/winestreamproxy .
+      
+      - name: Install build dependencies
+        run: |
+          apt-get update -y
+          apt-get install -y build-essential wine
+
+      - name: Build
+        run: |
+          ./build-64.sh
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: winestreamproxy
+          retention-days: 1
+          path: |
+            ./out/*
+
+
+
   build_launcher_linux:
     runs-on: ubuntu-latest
     steps:
@@ -210,6 +236,7 @@ jobs:
         run: |
           yarn install
           yarn run electron:build -l
+          cp -vr ./electron/external/* ./electron/dist_electron/linux-unpacked/
       - name: Write Git revision
         run: |
           mkdir -p ./electron/dist_electron/linux-unpacked/randomizer
@@ -312,7 +339,7 @@ jobs:
 
   build_linux_package:
     runs-on: ubuntu-latest
-    needs: [build_randomizer, build_seedgen, build_launcher_linux, render_credits]
+    needs: [build_randomizer, build_seedgen, build_launcher_linux, build_winestreamproxy, render_credits]
     steps:
       - name: Set up directories
         run: "mkdir -p /tmp/moon"
@@ -338,7 +365,18 @@ jobs:
           name: credits
           path: "/tmp/moon/randomizer/"
 
-      - name: Build installer
+      - name: Download winestreamproxy
+        uses: actions/download-artifact@v2
+        with:
+          name: winestreamproxy
+          path: "/tmp/winestreamproxy/"
+      
+      - name: Copy winestreamproxy into launcher
+        run: |
+          rm /tmp/winestreamproxy/settings.conf  # settings.conf is provided by the launcher
+          cp -vr /tmp/winestreamproxy/* /tmp/moon/winestreamproxy/
+
+      - name: Build package
         run: |
           tar -zcvf /tmp/WotwRando.tar.gz --xform s:'^./':: -C /tmp/moon ./
 
