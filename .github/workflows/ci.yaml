@@ -91,7 +91,7 @@ jobs:
           git -C C:\moon\randomizer\assets lfs checkout
           Remove-Item -Path C:\moon\randomizer\assets\.git -Force -Recurse
       - name: Archive randomizer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: randomizer
           path: |
@@ -99,7 +99,7 @@ jobs:
             !C:\moon\randomizer\*.pdb
           retention-days: 1
       - name: Archive PDBs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: pdb
           path: |
@@ -141,7 +141,7 @@ jobs:
           echo Copying wotw_seedgen\areas.wotw
           Copy-Item -Path wotw_seedgen\areas.wotw -Destination "C:\seedgen\areas.wotw"
       - name: Archive seedgen
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: seedgen
           path: 'C:\seedgen\**\*'
@@ -179,7 +179,7 @@ jobs:
           md -Path '.\electron\dist_electron\win-unpacked\randomizer'
           git rev-parse HEAD > .\electron\dist_electron\win-unpacked\randomizer\launcher.revision
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: launcher_windows
           retention-days: 1
@@ -220,7 +220,7 @@ jobs:
           mkdir -p ./electron/dist_electron/linux-unpacked/randomizer
           git rev-parse HEAD > ./electron/dist_electron/linux-unpacked/randomizer/launcher.revision
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: launcher_linux
           retention-days: 1
@@ -249,7 +249,7 @@ jobs:
         run: npm run generate
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: credits
           retention-days: 1
@@ -308,7 +308,7 @@ jobs:
           & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' /O"output" /F"WotwRandoSetup" setup.iss
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: installer
           retention-days: 7
@@ -348,7 +348,7 @@ jobs:
           tar -zcvf /tmp/WotwRando.tar.gz --xform s:'^./':: -C /tmp/moon .
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: linux_package
           retention-days: 7
