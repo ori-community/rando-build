@@ -361,7 +361,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: launcher_linux
-          path: "/tmp/launcher_linux.tar"
+          path: "/tmp/"
       - name: Extract launcher
         run: |
           tar -xvf /tmp/launcher_linux.tar -C /tmp/moon
@@ -385,7 +385,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: winestreamproxy
-          path: "/tmp/winestreamproxy.tar"
+          path: "/tmp/"
       
       - name: Extract winestreamproxy
         run: |
