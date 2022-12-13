@@ -166,6 +166,7 @@ jobs:
         run: |
           $env:API_SECURE = "true"
           $env:IS_ELECTRON = "true"
+          $env:PLATFORM = "win32"
           yarn run generate
           Copy-item -Force -Recurse -Verbose ".\dist\*" -Destination ".\electron\public\"
       - name: Build electron
@@ -206,6 +207,7 @@ jobs:
         run: |
           export API_SECURE="true"
           export IS_ELECTRON="true"
+          export PLATFORM="linux"
           yarn run generate
           cp -vr ./dist/* ./electron/public/
       - name: Build electron
