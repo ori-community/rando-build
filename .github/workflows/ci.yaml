@@ -203,12 +203,16 @@ jobs:
           ./build-64.sh
 
       - name: Archive artifacts
+        run: |
+          tar -cvf /tmp/winestreamproxy.tar -C ./out/ ./out/*
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: winestreamproxy
           retention-days: 1
           path: |
-            ./out/*
+            /tmp/winestreamproxy.tar
 
 
 
@@ -240,18 +244,21 @@ jobs:
         run: |
           yarn install
           yarn run electron:build -l
-          cp -vr ./external/* ./dist_electron/linux-unpacked/
+          cp -vrp ./external/* ./dist_electron/linux-unpacked/
       - name: Write Git revision
         run: |
           mkdir -p ./electron/dist_electron/linux-unpacked/randomizer
           git rev-parse HEAD > ./electron/dist_electron/linux-unpacked/randomizer/launcher.revision
       - name: Archive artifacts
+        run: |
+          tar -cvf /tmp/launcher_linux.tar -C ./electron/dist_electron/linux-unpacked/ ./electron/dist_electron/linux-unpacked/*
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: launcher_linux
           retention-days: 1
           path: |
-            ./electron/dist_electron/linux-unpacked/*
+            /tmp/launcher_linux.tar
 
 
   render_credits:
@@ -352,7 +359,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: launcher_linux
-          path: "/tmp/moon/"
+          path: "/tmp/"
+      - name: Extract launcher
+        run: |
+          tar -zvf -C /tmp/moon /tmp/launcher_linux.tar
       - name: Download randomizer
         uses: actions/download-artifact@v2
         with:
@@ -373,12 +383,17 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: winestreamproxy
-          path: "/tmp/winestreamproxy/"
+          path: "/tmp/"
+      
+      - name: Extract winestreamproxy
+        run: |
+          mkdir /tmp/winestreamproxy
+          tar -zvf -C /tmp/winestreamproxy /tmp/winestreamproxy.tar
       
       - name: Copy winestreamproxy into launcher
         run: |
           rm /tmp/winestreamproxy/settings.conf  # settings.conf is provided by the launcher
-          cp -vr /tmp/winestreamproxy/* /tmp/moon/winestreamproxy/
+          cp -vrp /tmp/winestreamproxy/* /tmp/moon/winestreamproxy/
 
       - name: Build package
         run: |
