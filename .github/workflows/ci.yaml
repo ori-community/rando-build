@@ -204,7 +204,8 @@ jobs:
 
       - name: Archive artifacts
         run: |
-          tar -cvf /tmp/winestreamproxy.tar -C ./out/ ./out/*
+          cd ./out/
+          tar -cvf /tmp/winestreamproxy.tar *
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -251,7 +252,8 @@ jobs:
           git rev-parse HEAD > ./electron/dist_electron/linux-unpacked/randomizer/launcher.revision
       - name: Archive artifacts
         run: |
-          tar -cvf /tmp/launcher_linux.tar -C ./electron/dist_electron/linux-unpacked/ ./electron/dist_electron/linux-unpacked/*
+          cd ./electron/dist_electron/linux-unpacked/
+          tar -cvf /tmp/launcher_linux.tar *
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -397,7 +399,8 @@ jobs:
 
       - name: Build package
         run: |
-          tar -zcvf /tmp/WotwRando.tar.gz --xform s:'^./':: -C /tmp/moon ./
+          cd /tmp/moon
+          tar -zcvf /tmp/WotwRando.tar.gz *
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
