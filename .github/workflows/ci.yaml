@@ -115,17 +115,12 @@ jobs:
         run: |
           git clone --branch ${{ github.event.inputs.seedgen_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
           git rev-parse HEAD > C:\seedgen\seedgen.revision
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          components: rustfmt, clippy
+      - name: Install Rust (Stable)
+        run:
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
       - name: Build seedgen
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release
+        run: |
+          cargo build --release
       - name: Copy artifacts
         shell: powershell
         run: |
