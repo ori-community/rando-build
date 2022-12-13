@@ -317,22 +317,22 @@ jobs:
         run: "md -Path 'C:\\moon\\randomizer'"
       
       - name: Download launcher
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: launcher_windows
           path: "C:\\moon\\"
       - name: Download randomizer
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: randomizer
           path: "C:\\moon\\randomizer\\"
       - name: Download seedgen
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: seedgen
           path: "C:\\moon\\randomizer\\"
       - name: Download credits
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: credits
           path: "C:\\moon\\randomizer\\"
@@ -358,34 +358,34 @@ jobs:
         run: "mkdir -p /tmp/moon"
 
       - name: Download launcher
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: launcher_linux
-          path: "/tmp/"
+          path: "/tmp/launcher_linux.tar"
       - name: Extract launcher
         run: |
           tar -xvf -C /tmp/moon /tmp/launcher_linux.tar
       - name: Download randomizer
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: randomizer
           path: "/tmp/moon/randomizer/"
       - name: Download seedgen
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: seedgen
           path: "/tmp/moon/randomizer/"
       - name: Download credits
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: credits
           path: "/tmp/moon/randomizer/"
 
       - name: Download winestreamproxy
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: winestreamproxy
-          path: "/tmp/"
+          path: "/tmp/winestreamproxy.tar"
       
       - name: Extract winestreamproxy
         run: |
@@ -417,12 +417,12 @@ jobs:
       - name: Set up directories
         run: "mkdir -p /tmp/release"
       - name: Download Installer
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: installer
           path: "/tmp/release/"
       - name: Download Linux package
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: linux_package
           path: "/tmp/release/"
