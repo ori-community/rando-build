@@ -240,7 +240,7 @@ jobs:
         run: |
           yarn install
           yarn run electron:build -l
-          cp -vr ./electron/external/* ./electron/dist_electron/linux-unpacked/
+          cp -vr ./external/* ./dist_electron/linux-unpacked/
       - name: Write Git revision
         run: |
           mkdir -p ./electron/dist_electron/linux-unpacked/randomizer
