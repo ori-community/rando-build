@@ -28,6 +28,7 @@ jobs:
     runs-on: windows-2022
     env:
       CONAN_USER_HOME: 'C:\.conan'
+      BUILDDIR: 'C:\build'
     steps:
       - name: Cache Conan
         id: cache-conan
@@ -42,7 +43,7 @@ jobs:
           md -Path 'C:\\moon\\randomizer'
       - name: Clone ori-rando/wotw-client
         run: |
-          git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-client.git .
+          git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-client.git ${{ env.BUILDDIR }}
           git rev-parse HEAD > C:\moon\randomizer\client.revision
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
@@ -61,11 +62,13 @@ jobs:
         run: echo "${{ steps.conan.outputs.version }}"
       - name: Generate solution
         shell: cmd
+        working-directory: ${{ env.BUILDDIR }}
         run: "gen_win64_vs2022.release.bat"
       - name: Compile Wotw Rando
         shell: cmd
+        working-directory: ${{ env.BUILDDIR }}
         run: |
-          cmake --build .\build\win64 --target INSTALL_RUNTIME --config RelWithDebInfo
+          cmake --build .\build\win64 --target INSTALL_RUNTIME --config RelWithDebInfo -- -clp:ForceConsoleColor
           IF ERRORLEVEL 1 (
             echo BUILD FAILED
             exit 1
@@ -82,6 +85,7 @@ jobs:
           echo -n "${{ github.run_id }}" > /c/moon/randomizer/run_id
       - name: Copy modloader_config.json
         shell: cmd
+        working-directory: ${{ env.BUILDDIR }}
         run: |
           copy modloader_config.json C:\moon\randomizer\modloader_config.json
       - name: Clone ori-rando/assets
