@@ -44,6 +44,7 @@ jobs:
       - name: Clone ori-rando/wotw-client
         run: |
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-client.git ${{ env.BUILDDIR }}
+          cd ${{ env.BUILDDIR }}
           git rev-parse HEAD > C:\moon\randomizer\client.revision
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
