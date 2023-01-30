@@ -41,9 +41,9 @@ jobs:
       - name: Set up directories
         run: |
           md -Path 'C:\\moon\\randomizer'
-      - name: Clone ori-rando/wotw-client
+      - name: Clone ori-community/wotw-rando-client
         run: |
-          git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-client.git ${{ env.BUILDDIR }}
+          git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git ${{ env.BUILDDIR }}
           cd ${{ env.BUILDDIR }}
           git rev-parse HEAD > C:\moon\randomizer\client.revision
       - name: Install MSVC developer tools
@@ -89,9 +89,9 @@ jobs:
         working-directory: ${{ env.BUILDDIR }}
         run: |
           copy modloader_config.json C:\moon\randomizer\modloader_config.json
-      - name: Clone ori-rando/assets
+      - name: Clone ori-community/wotw-rando-assets
         run: |
-          git clone --depth 1 https://github.com/ori-rando/assets.git C:\moon\randomizer\assets
+          git clone --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\assets
           git -C C:\moon\randomizer\assets rev-parse HEAD > C:\moon\randomizer\assets.revision
           git -C C:\moon\randomizer\assets lfs checkout
           Remove-Item -Path C:\moon\randomizer\assets\.git -Force -Recurse
@@ -116,9 +116,9 @@ jobs:
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\seedgen'"
-      - name: Clone ori-rando/wotw-seedgen
+      - name: Clone ori-community/wotw-seedgen
         run: |
-          git clone --branch ${{ github.event.inputs.seedgen_branch || 'dev' }} --depth 1 https://github.com/ori-rando/wotw-seedgen.git .
+          git clone --branch ${{ github.event.inputs.seedgen_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-seedgen.git .
           git rev-parse HEAD > C:\seedgen\seedgen.revision
       - name: Install Rust (Stable)
         run:
@@ -149,9 +149,9 @@ jobs:
   build_launcher_windows:
     runs-on: windows-2022
     steps:
-      - name: Clone ori-rando/ui
+      - name: Clone ori-community/rando-ui
         run: |
-          git clone --branch ${{ github.event.inputs.ui_branch || 'dev' }} --depth 1 https://github.com/ori-rando/ui .
+          git clone --branch ${{ github.event.inputs.ui_branch || 'dev' }} --depth 1 https://github.com/ori-community/rando-ui .
 
       - uses: actions/setup-node@v3
         with:
@@ -225,9 +225,9 @@ jobs:
   build_launcher_linux:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone ori-rando/ui
+      - name: Clone ori-community/rando-ui
         run: |
-          git clone --branch ${{ github.event.inputs.ui_branch || 'dev' }} --depth 1 https://github.com/ori-rando/ui .
+          git clone --branch ${{ github.event.inputs.ui_branch || 'dev' }} --depth 1 https://github.com/ori-community/rando-ui .
 
       - uses: actions/setup-node@v3
         with:
@@ -271,9 +271,9 @@ jobs:
   render_credits:
     runs-on: ubuntu-latest
     steps:
-      - name: Clone ori-rando/credits
+      - name: Clone ori-community/wotw-rando-credits
         run: |
-          git clone --depth 1 https://github.com/ori-rando/credits .
+          git clone --depth 1 https://github.com/ori-community/wotw-rando-credits .
           git rev-parse HEAD > credits.revision
 
       - uses: actions/setup-node@v3
