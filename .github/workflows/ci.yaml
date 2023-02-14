@@ -202,7 +202,7 @@ jobs:
           sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
           sudo apt-get update -y
           sudo apt-get install -y build-essential libc6-dev:i386 g++ g++-multilib mingw-w64 gcc-multilib
-          sudo apt-get install -y --install-recommends winehq-stable wine-stable-dev
+          sudo apt-get install -y --no-install-recommends winehq-stable wine-stable-dev
 
       - name: Build
         run: |
