@@ -188,7 +188,7 @@ jobs:
 
 
   build_winestreamproxy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Clone timoschwarzer/winestreamproxy
         run: |
@@ -199,9 +199,10 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo mkdir -pm755 /etc/apt/keyrings
           sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
           sudo apt-get update -y
-          sudo apt-get install -y build-essential winehq-stable wine-stable-dev libc6-dev:i386 g++ g++-multilib mingw-w64 gcc-multilib
+          sudo apt-get install -y build-essential libc6-dev:i386 g++ g++-multilib mingw-w64 gcc-multilib
+          sudo apt-get install -y --install-recommends winehq-stable wine-stable-dev
 
       - name: Build
         run: |
