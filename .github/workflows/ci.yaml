@@ -456,7 +456,7 @@ jobs:
           asset_path: '/tmp/release/WotwRandoSetup.exe'
           asset_name: WotwRandoSetup.exe
           asset_content_type: application/octet-stream
-      - name: Release WotwRandoSetup.exe
+      - name: Release WotwRando.tar.gz
         if: ${{ github.event.inputs.release_version != '' }}
         uses: actions/upload-release-asset@v1
         env:
