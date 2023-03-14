@@ -189,42 +189,6 @@ jobs:
             .\electron\dist_electron\win-unpacked\*
 
 
-  build_winestreamproxy:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Clone timoschwarzer/winestreamproxy
-        run: |
-          git clone --depth 1 https://github.com/timoschwarzer/winestreamproxy .
-      
-      - name: Install build dependencies
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo mkdir -pm755 /etc/apt/keyrings
-          sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-          sudo apt-get update -y
-          sudo apt-get install -y build-essential libc6-dev:i386 g++ g++-multilib mingw-w64 gcc-multilib
-          sudo apt-get install -y --no-install-recommends winehq-stable wine-stable-dev
-
-      - name: Build
-        run: |
-          ./build-64.sh
-
-      - name: Archive artifacts
-        run: |
-          cd ./out/
-          tar -cvf /tmp/winestreamproxy.tar *
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: winestreamproxy
-          retention-days: 1
-          path: |
-            /tmp/winestreamproxy.tar
-
-
-
   build_launcher_linux:
     runs-on: ubuntu-latest
     steps:
@@ -360,7 +324,7 @@ jobs:
 
   build_linux_package:
     runs-on: ubuntu-latest
-    needs: [build_randomizer, build_seedgen, build_launcher_linux, build_winestreamproxy, render_credits]
+    needs: [build_randomizer, build_seedgen, build_launcher_linux, render_credits]
     steps:
       - name: Set up directories
         run: "mkdir -p /tmp/moon"
@@ -388,22 +352,6 @@ jobs:
         with:
           name: credits
           path: "/tmp/moon/randomizer/"
-
-      - name: Download winestreamproxy
-        uses: actions/download-artifact@v3
-        with:
-          name: winestreamproxy
-          path: "/tmp/"
-      
-      - name: Extract winestreamproxy
-        run: |
-          mkdir /tmp/winestreamproxy
-          tar -xvf /tmp/winestreamproxy.tar -C /tmp/winestreamproxy
-      
-      - name: Copy winestreamproxy into launcher
-        run: |
-          rm /tmp/winestreamproxy/settings.conf  # settings.conf is provided by the launcher
-          cp -vrp /tmp/winestreamproxy/* /tmp/moon/winestreamproxy/
 
       - name: Build package
         run: |
