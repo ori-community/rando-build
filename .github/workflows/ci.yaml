@@ -162,7 +162,7 @@ jobs:
           cache-dependency-path: '**/yarn.lock'
       
       - name: Install dependencies 👨🏻‍💻
-        run: yarn install
+        run: yarn install --network-timeout 100000
 
       - name: Generate client
         run: |
@@ -174,7 +174,7 @@ jobs:
       - name: Build electron
         working-directory: .\\electron
         run: |
-          yarn install
+          yarn install --network-timeout 100000
           yarn run electron:build -- -w
       - name: Write Git revision
         run: |
@@ -203,7 +203,7 @@ jobs:
           cache-dependency-path: '**/yarn.lock'
 
       - name: Install dependencies 👨🏻‍💻
-        run: yarn install
+        run: yarn install --network-timeout 100000
 
       - name: Generate client
         run: |
@@ -215,7 +215,7 @@ jobs:
       - name: Build electron
         working-directory: ./electron
         run: |
-          yarn install
+          yarn install --network-timeout 100000
           yarn run electron:build -l
           cp -vrp ./external/* ./dist_electron/linux-unpacked/
       - name: Write Git revision
