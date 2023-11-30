@@ -22,6 +22,10 @@ on:
         description: 'Seedgen branch'
         required: true
         default: 'main'
+      seedgen_c_interop_branch:
+        description: 'Seedgen C interop branch'
+        required: true
+        default: 'main'
 
 jobs:
   build_randomizer:
@@ -148,6 +152,34 @@ jobs:
           name: seedgen
           path: 'C:\seedgen\**\*'
           retention-days: 1
+  
+  build_seedgen_c_interop:
+    runs-on: windows-2022
+    steps:
+      - name: Set up directories
+        run: "md -Path 'C:\\seedgen_c_interop'"
+      - name: Clone ori-community/wotw-seedgen-c-interop
+        run: |
+          git clone --branch ${{ github.event.inputs.seedgen_c_interop_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-seedgen-c-interop.git .
+          git rev-parse HEAD > C:\seedgen_c_interop\seedgen-c-interop.revision
+      - name: Install Rust (Stable)
+        run:
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+      - name: Build seedgen C interop
+        run: |
+          cargo build --release
+      - name: Copy artifacts
+        shell: powershell
+        run: |
+          echo Copying seedgen_interop.dll
+          Copy-Item -Path ".\target\release\wotw_seedgen_c_interop.dll" -Destination "C:\seedgen_c_interop\seedgen_interop.dll"
+      - name: Archive seedgen
+        uses: actions/upload-artifact@v3
+        with:
+          name: seedgen_c_interop
+          path: 'C:\seedgen_c_interop\**\*'
+          retention-days: 1
+
   build_launcher_windows:
     runs-on: windows-2022
     steps:
@@ -269,7 +301,7 @@ jobs:
 
   build_installer:
     runs-on: windows-2022
-    needs: [build_randomizer, build_seedgen, build_launcher_windows, render_credits]
+    needs: [build_randomizer, build_seedgen, build_seedgen_c_interop, build_launcher_windows, render_credits]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -303,6 +335,11 @@ jobs:
         with:
           name: seedgen
           path: "C:\\moon\\randomizer\\"
+      - name: Download seedgen_c_interop
+        uses: actions/download-artifact@v3
+        with:
+          name: seedgen_c_interop
+          path: "C:\\moon\\randomizer\\"
       - name: Download credits
         uses: actions/download-artifact@v3
         with:
@@ -324,7 +361,7 @@ jobs:
 
   build_linux_package:
     runs-on: ubuntu-latest
-    needs: [build_randomizer, build_seedgen, build_launcher_linux, render_credits]
+    needs: [build_randomizer, build_seedgen, build_seedgen_c_interop, build_launcher_linux, render_credits]
     steps:
       - name: Set up directories
         run: "mkdir -p /tmp/moon"
@@ -346,6 +383,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: seedgen
+          path: "/tmp/moon/randomizer/"
+      - name: Download seedgen_c_interop
+        uses: actions/download-artifact@v3
+        with:
+          name: seedgen_c_interop
           path: "/tmp/moon/randomizer/"
       - name: Download credits
         uses: actions/download-artifact@v3
