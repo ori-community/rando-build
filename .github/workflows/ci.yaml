@@ -50,6 +50,12 @@ jobs:
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git ${{ env.BUILDDIR }}
           cd ${{ env.BUILDDIR }}
           git rev-parse HEAD > C:\moon\randomizer\client.revision
+      - name: Cache CMake
+        id: cache-cmake
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.BUILDDIR }}/build
+          key: cmake-build
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
         with:
