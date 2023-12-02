@@ -32,7 +32,6 @@ jobs:
     runs-on: windows-2022
     env:
       CONAN_USER_HOME: 'C:\.conan'
-      BUILDDIR: 'C:\build'
     steps:
       - name: Cache Conan
         id: cache-conan
@@ -47,41 +46,37 @@ jobs:
           md -Path 'C:\\moon\\randomizer'
       - name: Clone ori-community/wotw-rando-client
         run: |
-          git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git ${{ env.BUILDDIR }}
-          cd ${{ env.BUILDDIR }}
+          git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git
+          cd wotw-rando-client
           git rev-parse HEAD > C:\moon\randomizer\client.revision
       - name: Cache CMake
         id: cache-cmake
         uses: actions/cache@v3
         with:
-          path: ${{ env.BUILDDIR }}/build
+          path: wotw-rando-client/cmake-build-relwithdebinfo
           key: cmake-build
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 5.0.x
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Install Conan
         id: conan
         uses: turtlebrowser/get-conan@main
         with:
-          version: 1.59.0
+          version: 1.62.0
       - name: Conan version
         run: echo "${{ steps.conan.outputs.version }}"
       - name: Generate solution
         shell: cmd
-        working-directory: ${{ env.BUILDDIR }}
+        working-directory: wotw-rando-client
         run: "gen_win64_vs2022.release.bat"
       - name: Compile Wotw Rando
         shell: cmd
-        working-directory: ${{ env.BUILDDIR }}
+        working-directory: wotw-rando-client
         run: |
-          cmake --build .\build\win64 --target INSTALL_RUNTIME --config RelWithDebInfo -- -clp:ForceConsoleColor
+          cmake --build cmake-build-relwithdebinfo --target INSTALL_RUNTIME --config RelWithDebInfo
           IF ERRORLEVEL 1 (
             echo BUILD FAILED
             exit 1
@@ -98,7 +93,7 @@ jobs:
           echo -n "${{ github.run_id }}" > /c/moon/randomizer/run_id
       - name: Copy modloader_config.json
         shell: cmd
-        working-directory: ${{ env.BUILDDIR }}
+        working-directory: wotw-rando-client
         run: |
           copy modloader_config.json C:\moon\randomizer\modloader_config.json
       - name: Clone ori-community/wotw-rando-assets
