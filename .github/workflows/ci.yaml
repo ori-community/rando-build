@@ -31,15 +31,8 @@ jobs:
   build_randomizer:
     runs-on: windows-2022
     env:
-      CONAN_USER_HOME: 'C:\.conan'
       SCCACHE_GHA_ENABLED: "true"
     steps:
-      - name: Cache Conan
-        id: cache-conan
-        uses: actions/cache@v3
-        with:
-          path: '${{ env.CONAN_USER_HOME }}'
-          key: conan
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.3
       - name: Load CMake and Ninja
@@ -64,17 +57,10 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
-      - name: Install Conan
-        id: conan
-        uses: turtlebrowser/get-conan@main
-        with:
-          version: 1.62.0
-      - name: Conan version
-        run: echo "${{ steps.conan.outputs.version }}"
       - name: Generate solution
         shell: cmd
         working-directory: wotw-rando-client
-        run: "gen_win64_vs2022.release.bat"
+        run: "generate-cmake.debug-vs2022.bat"
       - name: Compile Wotw Rando
         shell: cmd
         working-directory: wotw-rando-client
