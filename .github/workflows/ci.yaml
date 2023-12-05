@@ -48,17 +48,16 @@ jobs:
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git
           cd wotw-rando-client
           git rev-parse HEAD > C:\moon\randomizer\client.revision
-      - name: Cache CMake
-        id: cache-cmake
-        uses: actions/cache@v3
-        with:
-          path: wotw-rando-client/cmake-build-relwithdebinfo
-          key: cmake-build
       - name: Install MSVC developer tools
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
-      - name: Generate solution
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      - name: Generate CMake project
         shell: cmd
         working-directory: wotw-rando-client
         run: "generate-cmake.release-ninja.bat"
@@ -85,7 +84,7 @@ jobs:
         shell: cmd
         working-directory: wotw-rando-client
         run: |
-          copy modloader_config.json C:\moon\randomizer\modloader_config.json
+          copy resources\modloader_config.json C:\moon\randomizer\modloader_config.json
       - name: Clone ori-community/wotw-rando-assets
         run: |
           git clone --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\assets
