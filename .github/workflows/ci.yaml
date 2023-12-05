@@ -60,7 +60,7 @@ jobs:
       - name: Generate solution
         shell: cmd
         working-directory: wotw-rando-client
-        run: "generate-cmake.debug-vs2022.bat"
+        run: "generate-cmake.release-ninja.bat"
       - name: Compile Wotw Rando
         shell: cmd
         working-directory: wotw-rando-client
