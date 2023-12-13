@@ -298,8 +298,8 @@ jobs:
 
       - name: Install Inno setup
         run: |
-          Invoke-WebRequest -Uri "https://mlaan2.home.xs4all.nl/ispack/innosetup-6.2.1.exe" -OutFile innosetup.exe
-          if ((Get-FileHash innosetup.exe).Hash -eq "50D21AAB83579245F88E2632A61B943AD47557E42B0F02E6CE2AFEF4CDD8DEB1") {
+          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile innosetup.exe
+          if ((Get-FileHash innosetup.exe).Hash -eq "8117D10D00A2AD33A1390978EA3872861C330E087914410A6377B22C4C5B8563") {
             Start-Process .\innosetup.exe -ArgumentList "/VERYSILENT /LOG=innosetup.log" -NoNewWindow -Wait
             Get-Content innosetup.log
           } else {
