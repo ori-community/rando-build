@@ -48,10 +48,10 @@ jobs:
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git
           cd wotw-rando-client
           git rev-parse HEAD > C:\moon\randomizer\client.revision
-      - name: Install MSVC developer tools
-        uses: ilammy/msvc-dev-cmd@v1
+      - uses: TheMrMilchmann/setup-msvc-dev@v3
         with:
           arch: x64
+          toolset: 14.39  # Workaround for https://github.com/actions/runner-images/issues/9086
       - uses: actions/github-script@v6
         with:
           script: |
