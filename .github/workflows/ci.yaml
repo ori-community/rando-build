@@ -57,6 +57,11 @@ jobs:
           script: |
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+      - name: Update vcpkg repository
+        shell: cmd
+        run: |
+          cd /d C:\vcpkg
+          git pull
       - name: Generate CMake project
         shell: cmd
         working-directory: wotw-rando-client
