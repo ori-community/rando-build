@@ -54,7 +54,7 @@ begin
   if FileExists(FileName) then
   begin
     Log(Format('%s exists, will try to delete', [FileName]));
-    while (Timeout > 0) and (not DeleteFile(Path)) do
+    while not DeleteFile(Path) do
     begin
       Log(Format('Failed to delete %s, will try again in 1000 ms', [FileName]));
       Sleep(1000);
