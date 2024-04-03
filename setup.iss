@@ -41,9 +41,26 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\moon\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\moon\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\moon\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion overwritereadonly; BeforeInstall: DeleteWithRetry
+Source: "C:\moon\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs overwritereadonly; BeforeInstall: DeleteWithRetry
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+
+[Code]
+procedure DeleteWithRetry;
+var
+  FileName: string;
+begin
+  FileName := ExpandConstant(CurrentFileName);
+  if FileExists(FileName) then
+  begin
+    Log(Format('%s exists, will try to delete', [FileName]));
+    while (Timeout > 0) and (not DeleteFile(Path)) do
+    begin
+      Log(Format('Failed to delete %s, will try again in 1000 ms', [FileName]));
+      Sleep(1000);
+    end;
+  end;
+end;
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
