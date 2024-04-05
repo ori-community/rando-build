@@ -38,6 +38,8 @@ jobs:
         uses: mozilla-actions/sccache-action@v0.0.3
       - name: Load CMake and Ninja
         uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: 3.29.0
       - name: Enable Git support for long file paths
         run: git config --system core.longpaths true
       - name: Set up directories
