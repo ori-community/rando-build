@@ -40,6 +40,7 @@ jobs:
         uses: lukka/get-cmake@latest
         with:
           cmakeVersion: 3.29.5
+      - run: choco upgrade llvm  # Workaround for https://github.com/actions/runner-images/issues/10001
       - name: Enable Git support for long file paths
         run: git config --system core.longpaths true
       - name: Set up directories
