@@ -29,9 +29,9 @@ on:
 
 jobs:
   build_randomizer:
-    runs-on: self-hosted
+    runs-on: windows-2022
     env:
-      # SCCACHE_GHA_ENABLED: "true"
+      SCCACHE_GHA_ENABLED: "true"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     steps:
       - name: Run sccache-cache
