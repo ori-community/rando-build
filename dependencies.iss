@@ -194,38 +194,14 @@ begin
   Result := Dependency_NeedToRestart;
 end;
 
-function Dependency_IsX64: Boolean;
-begin
-  Result := not Dependency_ForceX86 and Is64BitInstallMode;
-end;
-
-function Dependency_String(const x86, x64: String): String;
-begin
-  if Dependency_IsX64 then begin
-    Result := x64;
-  end else begin
-    Result := x86;
-  end;
-end;
-
-function Dependency_ArchSuffix: String;
-begin
-  Result := Dependency_String('', '_x64');
-end;
-
-function Dependency_ArchTitle: String;
-begin
-  Result := Dependency_String(' (x86)', ' (x64)');
-end;
-
 procedure Dependency_AddVCppRuntime;
 begin
   // https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
-  if not IsMsiProductInstalled(Dependency_String('{65E5BD06-6392-3027-8C26-853107D3CF1A}', '{36F68A90-239C-34DF-B58C-64B30153CE35}'), PackVersionComponents(14, 40, 33810, 0)) then begin
-    Dependency_Add('vcredist2022' + Dependency_ArchSuffix + '.exe',
+  if not IsMsiProductInstalled('{36F68A90-239C-34DF-B58C-64B30153CE35}', PackVersionComponents(14, 40, 33810, 0)) then begin
+    Dependency_Add('vcredist2022_64.exe',
       '/passive /norestart',
-      'Visual C++ 2015-2022 Redistributable' + Dependency_ArchTitle,
-      Dependency_String('https://aka.ms/vs/17/release/vc_redist.x86.exe', 'https://aka.ms/vs/17/release/vc_redist.x64.exe'),
+      'Visual C++ 2015-2022 Redistributable (x64)',
+      'https://aka.ms/vs/17/release/vc_redist.x64.exe',
       '', False, False);
   end;
 end;
