@@ -10,6 +10,8 @@
 #define MyAppAssocExt ".wotwr"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
+#include "dependencies.iss"
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
@@ -46,6 +48,12 @@ Source: "C:\moon\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs creat
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Code]
+function InitializeSetup: Boolean;
+begin
+  Dependency_AddVCppRuntime;
+  Result := True;
+end;
+
 procedure DeleteWithRetry;
 var
   FileName: string;
