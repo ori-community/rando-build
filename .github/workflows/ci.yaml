@@ -195,6 +195,7 @@ jobs:
           $env:API_SECURE = "true"
           $env:IS_ELECTRON = "true"
           $env:PLATFORM = "win32"
+          Remove-Item -Force ".\static\background.mp4"
           yarn run generate
           Copy-item -Force -Recurse -Verbose ".\dist\*" -Destination ".\electron\public\"
       - name: Build electron
@@ -236,6 +237,7 @@ jobs:
           export API_SECURE="true"
           export IS_ELECTRON="true"
           export PLATFORM="linux"
+          rm -vf ./static/background.mp4
           yarn run generate
           cp -vr ./dist/* ./electron/public/
       - name: Build electron
