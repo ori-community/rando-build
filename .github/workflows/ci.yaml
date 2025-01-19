@@ -35,11 +35,11 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     steps:
       - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.3
-      - name: Load CMake and Ninja
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: 3.29.5
+        uses: mozilla-actions/sccache-action@v0.0.7
+      - name: Install CMake
+        run: choco install cmake
+      - name: Install Ninja
+        run: choco install ninja
       - name: Enable Git support for long file paths
         run: git config --system core.longpaths true
       - name: Set up directories
@@ -61,6 +61,7 @@ jobs:
         run: |
           cd /d C:\vcpkg
           git pull
+          .\bootstrap-vcpkg.bat
       - name: Generate CMake project
         shell: cmd
         working-directory: wotw-rando-client
