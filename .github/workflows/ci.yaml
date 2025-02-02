@@ -97,15 +97,16 @@ jobs:
           git -C C:\moon\randomizer\assets lfs checkout
           Remove-Item -Path C:\moon\randomizer\assets\.git -Force -Recurse
       - name: Archive randomizer
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: randomizer
+          include-hidden-files: true
           path: |
             C:\moon\randomizer\**\*
             !C:\moon\randomizer\*.pdb
           retention-days: 1
       - name: Archive PDBs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pdb
           path: |
@@ -142,9 +143,10 @@ jobs:
           echo Copying wotw_seedgen\areas.wotw
           Copy-Item -Path wotw_seedgen\areas.wotw -Destination "C:\seedgen\areas.wotw"
       - name: Archive seedgen
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: seedgen
+          include-hidden-files: true
           path: 'C:\seedgen\**\*'
           retention-days: 1
 
@@ -169,9 +171,10 @@ jobs:
           echo Copying seedgen_interop.dll
           Copy-Item -Path ".\target\release\wotw_seedgen_c_interop.dll" -Destination "C:\seedgen_c_interop\seedgen_interop.dll"
       - name: Archive seedgen
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: seedgen_c_interop
+          include-hidden-files: true
           path: 'C:\seedgen_c_interop\**\*'
           retention-days: 1
 
@@ -209,10 +212,11 @@ jobs:
           md -Path '.\electron\dist_electron\win-unpacked\randomizer'
           git rev-parse HEAD > .\electron\dist_electron\win-unpacked\randomizer\launcher.revision
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: launcher_windows
           retention-days: 1
+          include-hidden-files: true
           path: |
             .\electron\dist_electron\win-unpacked\*
 
@@ -256,7 +260,7 @@ jobs:
           cd ./electron/dist_electron/linux-unpacked/
           tar -cvf /tmp/launcher_linux.tar *
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: launcher_linux
           retention-days: 1
@@ -285,7 +289,7 @@ jobs:
         run: npm run generate
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: credits
           retention-days: 1
@@ -349,7 +353,7 @@ jobs:
           & 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' /O"output" /F"WotwRandoSetup" setup.iss
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: installer
           retention-days: 7
@@ -398,7 +402,7 @@ jobs:
           tar -zcvf /tmp/WotwRando.tar.gz *
 
       - name: Archive artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux_package
           retention-days: 7
