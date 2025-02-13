@@ -307,10 +307,10 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Install Inno setup 6.4.0
+      - name: Install Inno setup 6.4.1
         run: |
           Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile innosetup.exe
-          if ((Get-FileHash innosetup.exe).Hash -eq "a360db165cfb1d42d195b020700181e7eaf5db45c1249a24edb51c3c33e9d659") {
+          if ((Get-FileHash innosetup.exe).Hash -eq "f41760e1f1ae15d2089bb6ab162e21720b92ae7506ed70667b39200063d68e34") {
             Start-Process .\innosetup.exe -ArgumentList "/VERYSILENT /LOG=innosetup.log" -NoNewWindow -Wait
             Get-Content innosetup.log
           } else {
