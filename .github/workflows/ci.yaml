@@ -29,7 +29,7 @@ on:
 
 jobs:
   build_randomizer:
-    runs-on: windows-2022
+    runs-on: windows-2025
     env:
       SCCACHE_GHA_ENABLED: "true"
       VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
@@ -114,7 +114,7 @@ jobs:
   
 
   build_seedgen:
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\seedgen'"
@@ -151,7 +151,7 @@ jobs:
           retention-days: 1
 
   build_seedgen_c_interop:
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
       - name: Set up directories
         run: "md -Path 'C:\\seedgen_c_interop'"
@@ -179,7 +179,7 @@ jobs:
           retention-days: 1
 
   build_launcher_windows:
-    runs-on: windows-2022
+    runs-on: windows-2025
     steps:
       - name: Clone ori-community/rando-ui
         run: |
@@ -301,22 +301,15 @@ jobs:
 
 
   build_installer:
-    runs-on: windows-2022
+    runs-on: windows-2025
     needs: [build_randomizer, build_seedgen, build_seedgen_c_interop, build_launcher_windows, render_credits]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: Install Inno setup 6.5.1
+      - name: Install Inno setup
         run: |
-          Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile innosetup.exe
-          if ((Get-FileHash innosetup.exe).Hash -eq "3622ffdad7b2534239370099149c33adb85b90054799d901cb8ec844df7a0e41") {
-            Start-Process .\innosetup.exe -ArgumentList "/VERYSILENT /LOG=innosetup.log" -NoNewWindow -Wait
-            Get-Content innosetup.log
-          } else {
-            echo "Inno Setup hash verification failed"
-            exit 1
-          }
+          winget install --id JRSoftware.InnoSetup -e -s winget -i
 
       - name: Set up directories
         run: "md -Path 'C:\\moon\\randomizer'"
