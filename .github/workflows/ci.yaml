@@ -27,6 +27,9 @@ on:
         required: true
         default: 'main'
 
+permissions:
+  packages: write
+
 jobs:
   build_randomizer:
     runs-on: windows-2025
