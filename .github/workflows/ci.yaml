@@ -325,7 +325,7 @@ jobs:
 
       - name: Install Inno setup
         run: |
-          winget install --id JRSoftware.InnoSetup -e -s winget --silent --location C:\Inno
+          winget install --id JRSoftware.InnoSetup -e -s winget --force --uninstall-previous --silent --location C:\Inno
 
       - name: Set up directories
         run: "md -Path 'C:\\moon\\randomizer'"
