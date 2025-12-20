@@ -9,6 +9,7 @@
 #define MyAppAssocName MyAppName + " Seed"
 #define MyAppAssocExt ".wotwr"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
+#define InstallerRoot GetEnv('INSTALLER_ROOT')
 
 #include "dependencies.iss"
 
@@ -27,11 +28,11 @@ DefaultDirName={autopf}\{#MyAppName}
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
 LicenseFile=.\LICENSE.txt
-; Remove the following line to run in administrative install mode (install for all users.)
-PrivilegesRequired=lowest
+ArchitecturesAllowed=x64compatible
+ArchitecturesInstallIn64BitMode=x64compatible
 OutputBaseFilename=OriRandoSetup
 SetupIconFile=.\WotwRando.ico
-Compression=lzma
+Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
 CloseApplications=no
@@ -43,8 +44,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\moon\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion overwritereadonly; BeforeInstall: DeleteWithRetry
-Source: "C:\moon\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs overwritereadonly; BeforeInstall: DeleteWithRetry
+Source: "{#InstallerRoot}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion overwritereadonly; BeforeInstall: DeleteWithRetry
+Source: "{#InstallerRoot}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs overwritereadonly; BeforeInstall: DeleteWithRetry
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Code]
