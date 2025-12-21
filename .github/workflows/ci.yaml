@@ -114,6 +114,7 @@ jobs:
           path: |
             C:\moon\randomizer\**\*
             !C:\moon\randomizer\*.pdb
+            !C:\moon\randomizer\*.lib
           retention-days: 1
       - name: Archive PDBs
         uses: actions/upload-artifact@v6
