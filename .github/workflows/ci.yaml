@@ -124,7 +124,8 @@ jobs:
             C:\moon\randomizer\*.pdb
   
 
-  build_seedgen:
+
+  build_seedgen_windows:
     runs-on: windows-2025
     steps:
       - name: Set up directories
@@ -149,9 +150,35 @@ jobs:
       - name: Archive seedgen
         uses: actions/upload-artifact@v6
         with:
-          name: seedgen
+          name: seedgen_windows
           include-hidden-files: true
           path: 'C:\seedgen\**\*'
+          retention-days: 1
+  build_seedgen_linux:
+    runs-on: ubuntu_latest
+    steps:
+      - name: Set up directories
+        run: "mkdir /tmp/seedgen"
+      - name: Clone ori-community/wotw-seedgen
+        run: |
+          git clone --branch ${{ github.event.inputs.seedgen_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-seedgen.git .
+          git rev-parse HEAD > /tmp/seedgen/seedgen.revision
+      - name: Install Rust (Stable)
+        run:
+          curl https://sh.rustup.rs -sSf | sh -s -- -y
+      - name: Build seedgen
+        run: |
+          cargo build --release
+      - name: Copy artifacts
+        run: |
+          cp -v target/release/wotw-seedgen /tmp/seedgen/wotw-seedgen
+          cp -vr assets/* /tmp/seedgen/
+      - name: Archive seedgen
+        uses: actions/upload-artifact@v6
+        with:
+          name: seedgen_linux
+          include-hidden-files: true
+          path: '/tmp/seedgen/**/*'
           retention-days: 1
 
   build_launcher_windows:
@@ -286,9 +313,10 @@ jobs:
             ./credits.revision
 
 
-  build_installer:
+
+  build_windows_installer:
     runs-on: windows-2025
-    needs: [build_client, build_seedgen, build_launcher_windows, render_credits]
+    needs: [build_client, build_seedgen_windows, build_launcher_windows, render_credits]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
@@ -315,7 +343,7 @@ jobs:
       - name: Download seedgen
         uses: actions/download-artifact@v7
         with:
-          name: seedgen
+          name: seedgen_windows
           path: "C:\\_installer_root\\seedgen\\"
       - name: Download credits
         uses: actions/download-artifact@v7
@@ -333,62 +361,65 @@ jobs:
         run: |
           $env:APP_VERSION = "${{ github.event.inputs.release_version || 'dev' }}"
           $env:INSTALLER_ROOT = 'C:\\_installer_root'
-          & 'C:\Inno\ISCC.exe' /O"output" /F"WotwRandoSetup" setup.iss
+          & 'C:\Inno\ISCC.exe' /O"output" /F"WotwRandomizerSetup" setup.iss
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: installer
+          name: windows_installer
           retention-days: 7
           path: |
-            .\output\WotwRandoSetup.exe
+            .\output\WotwRandomizerSetup.exe
 
-  build_linux_package:
+
+  build_linux_appimage:
     runs-on: ubuntu-latest
-    needs: [build_client, build_seedgen, build_launcher_linux, render_credits]
+    needs: [build_client, build_seedgen_linux, build_launcher_linux, render_credits]
     steps:
+      - name: Clone ori-community/wotw-randomizer-appimage
+        run: |
+          git clone --depth 1 https://github.com/ori-community/wotw-randomizer-appimage .
+
       - name: Set up directories
         run: |
-          mkdir -p /tmp/installer_root/client
-          mkdir -p /tmp/installer_root/seedgen
+          mkdir -p appdir/opt/wotw-randomizer/client
+          mkdir -p appdir/opt/wotw-randomizer/seedgen
 
       - name: Download launcher
         uses: actions/download-artifact@v7
         with:
           name: launcher_linux
-          path: "/tmp/installer_root/"
+          path: "appdir/opt/wotw-randomizer/"
       - name: Download client
         uses: actions/download-artifact@v7
         with:
           name: client
-          path: "/tmp/installer_root/client/"
+          path: "appdir/opt/wotw-randomizer/client/"
       - name: Download seedgen
         uses: actions/download-artifact@v7
         with:
-          name: seedgen
-          path: "/tmp/installer_root/seedgen/"
+          name: seedgen_linux
+          path: "appdir/opt/wotw-randomizer/seedgen/"
       - name: Download credits
         uses: actions/download-artifact@v7
         with:
           name: credits
-          path: "/tmp/installer_root/client/"
+          path: "appdir/opt/wotw-randomizer/client/"
 
-      - name: Build package
-        run: |
-          cd /tmp/installer_root
-          tar -zcvf /tmp/WotwRando.tar.gz *
+      - name: Build AppImage
+        run: ./build.sh
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: linux_package
+          name: linux_appimage
           retention-days: 7
           path: |
-            /tmp/WotwRando.tar.gz
+            *.AppImage
 
   create_release:
     runs-on: ubuntu-latest
-    needs: [build_installer, build_linux_package]
+    needs: [build_windows_installer, build_linux_appimage]
     if: ${{ github.event.inputs.release_version != '' }}
     steps:
       - name: Set up directories
@@ -401,7 +432,7 @@ jobs:
       - name: Download Linux package
         uses: actions/download-artifact@v7
         with:
-          name: linux_package
+          name: linux_appimage
           path: "/tmp/release/"
       - name: Create draft release
         uses: softprops/action-gh-release@v2
@@ -412,5 +443,5 @@ jobs:
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
           files: |
-            /tmp/release/WotwRandoSetup.exe
-            /tmp/release/WotwRando.tar.gz
+            /tmp/release/WotwRandomizerSetup.exe
+            /tmp/release/WotwRandomizer.AppImage
