@@ -430,7 +430,7 @@ jobs:
       - name: Download Installer
         uses: actions/download-artifact@v7
         with:
-          name: installer
+          name: windows_installer
           path: "/tmp/release/"
       - name: Download Linux package
         uses: actions/download-artifact@v7
