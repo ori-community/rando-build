@@ -155,7 +155,7 @@ jobs:
           path: 'C:\seedgen\**\*'
           retention-days: 1
   build_seedgen_linux:
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
       - name: Set up directories
         run: "mkdir /tmp/seedgen"
