@@ -47,7 +47,7 @@ jobs:
         run: git config --system core.longpaths true
       - name: Set up directories
         run: |
-          md -Path 'C:\\moon\\randomizer'
+          md -Path 'C:\\moon\\randomizer\\client'
       - name: Clone ori-community/wotw-rando-client
         run: |
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git
