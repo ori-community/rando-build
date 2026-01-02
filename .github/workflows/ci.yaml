@@ -52,7 +52,7 @@ jobs:
         run: |
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git
           cd wotw-rando-client
-          git rev-parse HEAD > C:\moon\randomizer\client.revision
+          git rev-parse HEAD > C:\moon\randomizer\client\client.revision
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: actions/github-script@v8
         with:
@@ -99,29 +99,29 @@ jobs:
         shell: cmd
         working-directory: wotw-rando-client
         run: |
-          copy resources\modloader_config.json C:\moon\randomizer\modloader_config.json
+          copy resources\modloader_config.json C:\moon\randomizer\client\modloader_config.json
       - name: Clone ori-community/wotw-rando-assets
         run: |
-          git clone --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\assets
-          git -C C:\moon\randomizer\assets rev-parse HEAD > C:\moon\randomizer\assets.revision
-          git -C C:\moon\randomizer\assets lfs checkout
-          Remove-Item -Path C:\moon\randomizer\assets\.git -Force -Recurse
+          git clone --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\client\assets
+          git -C C:\moon\randomizer\client\assets rev-parse HEAD > C:\moon\randomizer\client\assets.revision
+          git -C C:\moon\randomizer\client\assets lfs checkout
+          Remove-Item -Path C:\moon\randomizer\client\assets\.git -Force -Recurse
       - name: Archive randomizer
         uses: actions/upload-artifact@v6
         with:
           name: client
           include-hidden-files: true
           path: |
-            C:\moon\randomizer\**\*
-            !C:\moon\randomizer\*.pdb
-            !C:\moon\randomizer\*.lib
+            C:\moon\randomizer\client\**\*
+            !C:\moon\randomizer\client\*.pdb
+            !C:\moon\randomizer\client\*.lib
           retention-days: 1
       - name: Archive PDBs
         uses: actions/upload-artifact@v6
         with:
           name: pdb
           path: |
-            C:\moon\randomizer\*.pdb
+            C:\moon\randomizer\client\*.pdb
   
 
 
