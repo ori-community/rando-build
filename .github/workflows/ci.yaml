@@ -9,19 +9,19 @@ on:
       release_version:
         description: 'Release version (leave empty to build only)'
         required: false
-        default: ''
+        default: '5.0.0-alpha.'
       client_branch:
         description: 'Client branch'
         required: true
-        default: 'main'
+        default: 'v5'
       ui_branch:
         description: 'UI branch'
         required: true
-        default: 'main'
+        default: 'v5'
       seedgen_branch:
         description: 'Seedgen branch'
         required: true
-        default: 'main'
+        default: 'v5'
 
 permissions:
   packages: write
