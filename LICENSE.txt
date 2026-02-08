@@ -1,12 +1,12 @@
 MIT License
 
-Copyright (c) 2020 Eiko, MunWolf, Xemsys, zre, Sirius and contributors
+Copyright (c) 2026 - zre, Sirius, Mawe, Eiko, MunWolf, Xemsys and contributors
 
-This project uses the following software, 
+This project uses the following software,
 also licensed under the MIT License:
 
 https://github.com/JamesNK/Newtonsoft.Json/
-Copyright (c) 2007 James Newton-King 
+Copyright (c) 2007 James Newton-King
 
 https://github.com/microsoft/Detours/
 Copyright (c) Microsoft Corporation
