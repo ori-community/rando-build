@@ -354,8 +354,8 @@ jobs:
         shell: bash
         run: |
           echo Writing version file...
-          (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > VERSION
-          cp -f VERSION /c/_installer_root/VERSION
+          (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > randomizer_version
+          cp -f randomizer_version /c/_installer_root/randomizer_version
 
       - name: Build installer
         run: |
@@ -412,6 +412,12 @@ jobs:
           chmod +x "appdir/opt/wotw-randomizer/seedgen/wotw-seedgen"
           chmod +x "appdir/opt/wotw-randomizer/Ori and the Will of the Wisps Randomizer"
 
+      - name: Write version file
+        run: |
+          echo Writing version file...
+          (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > randomizer_version
+          cp -f randomizer_version appdir/opt/wotw-randomizer/randomizer_version
+
       - name: Build AppImage
         run: ./build.sh
 
@@ -452,6 +458,12 @@ jobs:
         with:
           name: credits
           path: "/tmp/installer_root/client/"
+
+      - name: Write version file
+        run: |
+          echo Writing version file...
+          (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > randomizer_version
+          cp -f randomizer_version /tmp/installer_root/randomizer_version
 
       - name: Build package
         run: |
