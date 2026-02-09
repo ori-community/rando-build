@@ -407,6 +407,11 @@ jobs:
           name: credits
           path: "appdir/opt/wotw-randomizer/client/"
 
+      - name: Make executables executable
+        run: |
+          chmod +x "appdir/opt/wotw-randomizer/seedgen/wotw-seedgen"
+          chmod +x "appdir/opt/wotw-randomizer/Ori and the Will of the Wisps Randomizer"
+
       - name: Build AppImage
         run: ./build.sh
 
