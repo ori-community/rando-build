@@ -374,6 +374,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build_client, build_seedgen_linux, build_launcher_linux, render_credits]
     steps:
+      - name: Install bsdtar
+        run: sudo apt-get -y install libarchive-tools
+
       - name: Clone ori-community/wotw-randomizer-appimage
         run: |
           git clone --depth 1 https://github.com/ori-community/wotw-randomizer-appimage .
