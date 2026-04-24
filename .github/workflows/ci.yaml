@@ -172,7 +172,7 @@ jobs:
       - name: Copy artifacts
         run: |
           cp -v target/release/wotw-seedgen /tmp/seedgen/wotw-seedgen
-          cp -vr assets/* /tmp/seedgen/
+          cp -Lvr assets/* /tmp/seedgen/
       - name: Archive seedgen
         uses: actions/upload-artifact@v6
         with:
