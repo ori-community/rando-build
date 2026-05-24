@@ -467,6 +467,11 @@ jobs:
           (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > randomizer_version
           cp -f randomizer_version /tmp/installer_root/randomizer_version
 
+      - name: Make executables executable
+        run: |
+          chmod +x "/tmp/installer_root/seedgen/wotw-seedgen"
+          chmod +x "/tmp/installer_root/Ori and the Will of the Wisps Randomizer"
+
       - name: Build package
         run: |
           cd /tmp/installer_root
