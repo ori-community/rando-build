@@ -43,6 +43,9 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
+[InstallDelete]
+Type: files; Name: "{app}"
+
 [Files]
 Source: "{#InstallerRoot}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion overwritereadonly; BeforeInstall: DeleteWithRetry
 Source: "{#InstallerRoot}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs overwritereadonly; BeforeInstall: DeleteWithRetry
