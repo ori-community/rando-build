@@ -198,10 +198,10 @@ procedure Dependency_AddVCppRuntime;
 begin
   // https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist
   if not IsMsiProductInstalled('{36F68A90-239C-34DF-B58C-64B30153CE35}', PackVersionComponents(14, 51, 36231, 0)) then begin
-    Dependency_Add('vcredist2022_64.exe',
+    Dependency_Add('VC_redist.x64',
       '/passive /norestart',
-      'Visual C++ 2015-2022 Redistributable (x64)',
-      'https://aka.ms/vs/17/release/vc_redist.x64.exe',
+      'Visual C++ 2017-2026 Redistributable (x64)',
+      'https://aka.ms/vc14/vc_redist.x64.exe',
       '', False, False);
   end;
 end;
