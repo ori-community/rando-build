@@ -237,7 +237,7 @@ jobs:
           retention-days: 1
           include-hidden-files: true
           path: |
-            .\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\*
+            .\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\**\*
 
 
   build_launcher_linux:
@@ -279,6 +279,10 @@ jobs:
 
       - name: Write Git revision
         run: |
+          ls -lah .
+          ls -lah ./launcher
+          ls -lah ./launcher/out
+          ls -lah "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64"
           mkdir "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions"
           git rev-parse HEAD > "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions/launcher.revision"
 
@@ -289,7 +293,7 @@ jobs:
           retention-days: 1
           include-hidden-files: true
           path: |
-            ./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/*
+            ./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/**/*
 
 
   render_credits:
