@@ -48,11 +48,12 @@ jobs:
       - name: Set up directories
         run: |
           md -Path 'C:\\moon\\randomizer\\client'
+          md -Path 'C:\\moon\\randomizer\\versions'
       - name: Clone ori-community/wotw-rando-client
         run: |
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git
           cd wotw-rando-client
-          git rev-parse HEAD > C:\moon\randomizer\client\client.revision
+          git rev-parse HEAD > C:\moon\randomizer\versions\client.revision
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: actions/github-script@v8
         with:
@@ -103,7 +104,7 @@ jobs:
       - name: Clone ori-community/wotw-rando-assets
         run: |
           git clone --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\client\assets
-          git -C C:\moon\randomizer\client\assets rev-parse HEAD > C:\moon\randomizer\client\assets.revision
+          git -C C:\moon\randomizer\client\assets rev-parse HEAD > C:\moon\randomizer\versions\assets.revision
           git -C C:\moon\randomizer\client\assets lfs checkout
           Remove-Item -Path C:\moon\randomizer\client\assets\.git -Force -Recurse
       - name: Archive randomizer
@@ -129,11 +130,14 @@ jobs:
     runs-on: windows-2025
     steps:
       - name: Set up directories
-        run: "md -Path 'C:\\seedgen'"
+        run: |
+          md -Path 'C:\_install_root'
+          md -Path 'C:\_install_root\seedgen'
+          md -Path 'C:\_install_root\versions'
       - name: Clone ori-community/wotw-seedgen
         run: |
           git clone --branch ${{ github.event.inputs.seedgen_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-seedgen.git .
-          git rev-parse HEAD > C:\seedgen\seedgen.revision
+          git rev-parse HEAD > C:\_install_root\versions\seedgen.revision
       - name: Install Rust (Stable)
         run:
           curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -144,25 +148,28 @@ jobs:
         shell: powershell
         run: |
           echo Copying seedgen.exe
-          Copy-Item -Path ".\target\release\wotw-seedgen.exe" -Destination "C:\seedgen\wotw-seedgen.exe"
+          Copy-Item -Path ".\target\release\wotw-seedgen.exe" -Destination "C:\_install_root\seedgen\wotw-seedgen.exe"
           echo Copying headers and presets
-          Copy-Item -Path assets\* -Recurse -Destination C:\seedgen\
+          Copy-Item -Path assets\* -Recurse -Destination C:\_install_root\seedgen\
       - name: Archive seedgen
         uses: actions/upload-artifact@v6
         with:
           name: seedgen_windows
           include-hidden-files: true
-          path: 'C:\seedgen\**\*'
+          path: 'C:\_install_root\**\*'
           retention-days: 1
   build_seedgen_linux:
     runs-on: ubuntu-latest
     steps:
       - name: Set up directories
-        run: "mkdir /tmp/seedgen"
+        run: |
+          mkdir /tmp/_install_root
+          mkdir /tmp/_install_root/versions
+          mkdir /tmp/_install_root/seedgen
       - name: Clone ori-community/wotw-seedgen
         run: |
           git clone --branch ${{ github.event.inputs.seedgen_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-seedgen.git .
-          git rev-parse HEAD > /tmp/seedgen/seedgen.revision
+          git rev-parse HEAD > /tmp/_install_root/versions/seedgen.revision
       - name: Install Rust (Stable)
         run:
           curl https://sh.rustup.rs -sSf | sh -s -- -y
@@ -171,14 +178,14 @@ jobs:
           cargo build --release
       - name: Copy artifacts
         run: |
-          cp -vp target/release/wotw-seedgen /tmp/seedgen/wotw-seedgen
-          cp -Lvr assets/* /tmp/seedgen/
+          cp -vp target/release/wotw-seedgen /tmp/_install_root/seedgen/wotw-seedgen
+          cp -Lvr assets/* /tmp/_install_root/seedgen/
       - name: Archive seedgen
         uses: actions/upload-artifact@v6
         with:
           name: seedgen_linux
           include-hidden-files: true
-          path: '/tmp/seedgen/**/*'
+          path: '/tmp/_install_root/**/*'
           retention-days: 1
 
   build_launcher_windows:
@@ -220,7 +227,8 @@ jobs:
 
       - name: Write Git revision
         run: |
-          git rev-parse HEAD > ".\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\launcher.revision"
+          md -Path '.\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\versions'
+          git rev-parse HEAD > ".\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\versions\launcher.revision"
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v6
@@ -271,7 +279,8 @@ jobs:
 
       - name: Write Git revision
         run: |
-          git rev-parse HEAD > "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/launcher.revision"
+          mkdir "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions"
+          git rev-parse HEAD > "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions/launcher.revision"
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v6
@@ -286,10 +295,16 @@ jobs:
   render_credits:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up directories
+        run: |
+          mkdir /tmp/_install_root
+          mkdir /tmp/_install_root/versions
+          mkdir /tmp/_install_root/client
+
       - name: Clone ori-community/wotw-rando-credits
         run: |
           git clone --depth 1 https://github.com/ori-community/wotw-rando-credits .
-          git rev-parse HEAD > credits.revision
+          git rev-parse HEAD > /tmp/_install_root/versions/credits.revision
 
       - uses: actions/setup-node@v3
         with:
@@ -303,14 +318,16 @@ jobs:
       - name: Render credits
         run: npm run generate
 
+      - name: Move credits
+        run: mv credits /tmp/_install_root/client/credits
+
       - name: Archive artifacts
         uses: actions/upload-artifact@v6
         with:
           name: credits
           retention-days: 1
           path: |
-            ./credits
-            ./credits.revision
+            /tmp/_install_root/**/*
 
 
 
@@ -325,11 +342,6 @@ jobs:
         run: |
           winget install --id JRSoftware.InnoSetup -e -s winget --force --uninstall-previous --silent --location C:\Inno
 
-      - name: Set up directories
-        run: |
-          md -Path 'C:\\_installer_root\\client'
-          md -Path 'C:\\_installer_root\\seedgen'
-
       - name: Download launcher
         uses: actions/download-artifact@v7
         with:
@@ -339,23 +351,23 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: client
-          path: "C:\\_installer_root\\client\\"
+          path: "C:\\_installer_root\\"
       - name: Download seedgen
         uses: actions/download-artifact@v7
         with:
           name: seedgen_windows
-          path: "C:\\_installer_root\\seedgen\\"
+          path: "C:\\_installer_root\\"
       - name: Download credits
         uses: actions/download-artifact@v7
         with:
           name: credits
-          path: "C:\\_installer_root\\client\\"
+          path: "C:\\_installer_root\\"
       - name: Write version file
         shell: bash
         run: |
-          echo Writing version file...
+          echo Writing/moving version files...
           (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > randomizer_version
-          cp -f randomizer_version /c/_installer_root/randomizer_version
+          cp -f randomizer_version /c/_installer_root/versions/randomizer_version
 
       - name: Build installer
         run: |
@@ -383,11 +395,6 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/ori-community/wotw-randomizer-appimage .
 
-      - name: Set up directories
-        run: |
-          mkdir -p appdir/opt/wotw-randomizer/client
-          mkdir -p appdir/opt/wotw-randomizer/seedgen
-
       - name: Download launcher
         uses: actions/download-artifact@v7
         with:
@@ -397,17 +404,17 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: client
-          path: "appdir/opt/wotw-randomizer/client/"
+          path: "appdir/opt/wotw-randomizer/"
       - name: Download seedgen
         uses: actions/download-artifact@v7
         with:
           name: seedgen_linux
-          path: "appdir/opt/wotw-randomizer/seedgen/"
+          path: "appdir/opt/wotw-randomizer/"
       - name: Download credits
         uses: actions/download-artifact@v7
         with:
           name: credits
-          path: "appdir/opt/wotw-randomizer/client/"
+          path: "appdir/opt/wotw-randomizer/"
 
       - name: Make executables executable
         run: |
@@ -418,7 +425,7 @@ jobs:
         run: |
           echo Writing version file...
           (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > randomizer_version
-          cp -f randomizer_version appdir/opt/wotw-randomizer/randomizer_version
+          cp -f randomizer_version appdir/opt/wotw-randomizer/versions/randomizer_version
 
       - name: Build AppImage
         run: ./build.sh
@@ -435,11 +442,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build_client, build_seedgen_LINUX, build_launcher_linux, render_credits]
     steps:
-      - name: Set up directories
-        run: |
-          mkdir -p /tmp/installer_root/client
-          mkdir -p /tmp/installer_root/seedgen
-
       - name: Download launcher
         uses: actions/download-artifact@v7
         with:
@@ -449,23 +451,23 @@ jobs:
         uses: actions/download-artifact@v7
         with:
           name: client
-          path: "/tmp/installer_root/client/"
+          path: "/tmp/installer_root/"
       - name: Download seedgen
         uses: actions/download-artifact@v7
         with:
           name: seedgen_linux
-          path: "/tmp/installer_root/seedgen/"
+          path: "/tmp/installer_root/"
       - name: Download credits
         uses: actions/download-artifact@v7
         with:
           name: credits
-          path: "/tmp/installer_root/client/"
+          path: "/tmp/installer_root/"
 
       - name: Write version file
         run: |
           echo Writing version file...
           (if [[ -n "${{ github.event.inputs.release_version }}" ]]; then echo -n "${{ github.event.inputs.release_version }}"; else echo -n "develop"; fi) > randomizer_version
-          cp -f randomizer_version /tmp/installer_root/randomizer_version
+          cp -f randomizer_version /tmp/installer_root/versions/randomizer_version
 
       - name: Make executables executable
         run: |
