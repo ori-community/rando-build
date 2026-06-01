@@ -113,16 +113,16 @@ jobs:
           name: client
           include-hidden-files: true
           path: |
-            C:\moon\randomizer\client\**\*
-            !C:\moon\randomizer\client\*.pdb
-            !C:\moon\randomizer\client\*.lib
+            C:\moon\randomizer\**\*
+            !C:\moon\randomizer\**\*.pdb
+            !C:\moon\randomizer\**\*.lib
           retention-days: 1
       - name: Archive PDBs
         uses: actions/upload-artifact@v6
         with:
           name: pdb
           path: |
-            C:\moon\randomizer\client\*.pdb
+            C:\moon\randomizer\**\*.pdb
   
 
 
@@ -279,10 +279,6 @@ jobs:
 
       - name: Write Git revision
         run: |
-          ls -lah .
-          ls -lah ./launcher
-          ls -lah ./launcher/out
-          ls -lah "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64"
           mkdir "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions"
           git rev-parse HEAD > "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions/launcher.revision"
 
