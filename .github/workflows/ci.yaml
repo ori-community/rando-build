@@ -95,7 +95,7 @@ jobs:
       - name: Write Run ID
         shell: bash
         run: |
-          echo -n "${{ github.run_id }}" > /c/moon/randomizer/run_id
+          echo -n "${{ github.run_id }}" > /c/moon/randomizer/versions/run_id
       - name: Copy modloader_config.json
         shell: cmd
         working-directory: wotw-rando-client
