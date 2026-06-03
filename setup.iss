@@ -44,7 +44,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [InstallDelete]
-Type: filesandordirs; Name: "{app}"
+Type: filesandordirs; Name: "{app}\*"
 
 [Files]
 Source: "{#InstallerRoot}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion overwritereadonly; BeforeInstall: DeleteWithRetry
