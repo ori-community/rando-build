@@ -191,6 +191,10 @@ jobs:
   build_launcher_windows:
     runs-on: windows-2025
     steps:
+      - name: Install VS2022 build tools
+        run: |
+          choco install visualstudio2022buildtools
+
       - name: Clone ori-community/rando-ui
         run: |
           git clone --branch ${{ github.event.inputs.ui_branch || 'dev' }} --depth 1 https://github.com/ori-community/rando-ui .
