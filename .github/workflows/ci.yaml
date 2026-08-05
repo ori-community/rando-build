@@ -106,9 +106,9 @@ jobs:
           git clone --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\client\assets
           git -C C:\moon\randomizer\client\assets rev-parse HEAD > C:\moon\randomizer\versions\assets.revision
           git -C C:\moon\randomizer\client\assets lfs checkout
-          Remove-Item -Path C:\moon\randomizer\assets\README.md -Force
-          Remove-Item -Path C:\moon\randomizer\assets\.gitignore -Force
-          Remove-Item -Path C:\moon\randomizer\assets\.gitattributes -Force
+          Remove-Item -Path C:\moon\randomizer\client\assets\README.md -Force
+          Remove-Item -Path C:\moon\randomizer\client\assets\.gitignore -Force
+          Remove-Item -Path C:\moon\randomizer\client\assets\.gitattributes -Force
           Remove-Item -Path C:\moon\randomizer\client\assets\.git -Force -Recurse
       - name: Archive randomizer
         uses: actions/upload-artifact@v6
