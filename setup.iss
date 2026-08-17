@@ -35,7 +35,7 @@ SetupIconFile=.\WotwRando.ico
 Compression=lzma2/max
 SolidCompression=yes
 WizardStyle=modern
-CloseApplications=no
+CloseApplications=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
