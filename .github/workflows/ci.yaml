@@ -179,6 +179,10 @@ jobs:
       - name: Build seedgen
         run: |
           cargo build --release
+      - name: Compile installed seeds
+        run: |
+          export SEEDGEN_USER_DATA_DIR=assets
+          for seed in assets/plandos/src/*; do target/release/wotw-seedgen plando $seed; done
       - name: Copy artifacts
         run: |
           cp -vp target/release/wotw-seedgen /tmp/_install_root/seedgen/wotw-seedgen
