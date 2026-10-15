@@ -38,7 +38,7 @@ jobs:
       VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/ori-community/index.json,readwrite"
     steps:
       - name: Run sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.9
+        uses: mozilla-actions/sccache-action@v0.0.11
       - name: Install CMake
         run: choco install cmake
       - name: Install Ninja
@@ -130,9 +130,14 @@ jobs:
 
 
   build_seedgen_windows:
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: "sccache"
     runs-on: windows-2025
     steps:
-      - name: Set up directories
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.11
+      - name: Run sccache-cache
         run: |
           md -Path 'C:\_install_root'
           md -Path 'C:\_install_root\seedgen'
@@ -167,8 +172,13 @@ jobs:
           path: 'C:\_install_root\**\*'
           retention-days: 1
   build_seedgen_linux:
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: "sccache"
     runs-on: ubuntu-latest
     steps:
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.11
       - name: Set up directories
         run: |
           mkdir /tmp/_install_root
