@@ -147,6 +147,11 @@ jobs:
       - name: Build seedgen
         run: |
           cargo build --release
+      - name: Compile installed seeds
+        shell: powershell
+        run: |
+          $Env:SEEDGEN_USER_DATA_DIR = "assets"
+          Get-ChildItem "assets/plandos/src" | Foreach-Object { ./target/release/wotw-seedgen.exe plando "$_" }
       - name: Copy artifacts
         shell: powershell
         run: |
