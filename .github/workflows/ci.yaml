@@ -252,6 +252,10 @@ jobs:
           md -Path '.\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\versions'
           git rev-parse HEAD > ".\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\versions\launcher.revision"
 
+      - name: Copy icon
+        run: |
+          Copy-Item -Force ".\launcher\resources\icon.png" ".\launcher\out\Ori and the Will of the Wisps Randomizer-win32-x64\icon.png"
+
       - name: Archive artifacts
         uses: actions/upload-artifact@v6
         with:
@@ -303,6 +307,10 @@ jobs:
         run: |
           mkdir "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions"
           git rev-parse HEAD > "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/versions/launcher.revision"
+
+      - name: Copy icon
+        run: |
+          cp ./launcher/resources/icon.png "./launcher/out/Ori and the Will of the Wisps Randomizer-linux-x64/icon.png"
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v6
