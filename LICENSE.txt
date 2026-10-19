@@ -1,21 +1,6 @@
 MIT License
 
-Copyright (c) 2026 - zre, Sirius, Mawe, Eiko, MunWolf, Xemsys and contributors
-
-This project uses the following software,
-also licensed under the MIT License:
-
-https://github.com/JamesNK/Newtonsoft.Json/
-Copyright (c) 2007 James Newton-King
-
-https://github.com/microsoft/Detours/
-Copyright (c) Microsoft Corporation
-
-https://github.com/ocornut/imgui/
-Copyright (c) 2014-2020 Omar Cornut
-
-https://github.com/nlohmann/json
-Copyright (c) 2013-2020 Niels Lohmann
+Copyright (c) 2021-2026 - zre, Sirius, Mawe, Eiko, MunWolf, Xemsys and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
