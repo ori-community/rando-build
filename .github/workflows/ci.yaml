@@ -9,7 +9,7 @@ on:
       release_version:
         description: 'Release version (leave empty to build only)'
         required: false
-        default: '5.0.0-alpha.'
+        default: '5.0.0-beta.'
       client_branch:
         description: 'Client branch'
         required: true
