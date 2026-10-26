@@ -336,9 +336,9 @@ jobs:
           git clone --depth 1 https://github.com/ori-community/wotw-rando-credits .
           git rev-parse HEAD > /tmp/_install_root/versions/credits.revision
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
 
