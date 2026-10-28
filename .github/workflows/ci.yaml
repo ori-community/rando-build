@@ -54,7 +54,9 @@ jobs:
           git clone --branch ${{ github.event.inputs.client_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-client.git
           cd wotw-rando-client
           git rev-parse HEAD > C:\moon\randomizer\versions\client.revision
-      - uses: ilammy/msvc-dev-cmd@v1
+      - uses: TheMrMilchmann/setup-msvc-dev@v4
+        with:
+          arch: x64
       - uses: actions/github-script@v8
         with:
           script: |
@@ -366,7 +368,7 @@ jobs:
     needs: [build_client, build_seedgen_windows, build_launcher_windows, render_credits]
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
       - name: Install Inno setup
         run: |
@@ -540,10 +542,10 @@ jobs:
           name: linux_package
           path: "/tmp/release/"
       - name: Create draft release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           draft: true
-          body: TODO
+          body: ''
           prerelease: false
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
