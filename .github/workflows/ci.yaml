@@ -95,6 +95,11 @@ jobs:
             echo BUILD FAILED
             exit 1
           )
+      - name: Copy CRT
+        shell: pwsh
+        run: |
+          Copy-Item -Path $env:VCINSTALLDIR\Redist\MSVC\14.*\x64\Microsoft.VC*.CRT\msvcp140*.dll C:\moon\randomizer\
+          Copy-Item -Path $env:VCINSTALLDIR\Redist\MSVC\14.*\x64\Microsoft.VC*.CRT\vcruntime*.dll C:\moon\randomizer\
       - name: Write version file
         shell: bash
         run: |
