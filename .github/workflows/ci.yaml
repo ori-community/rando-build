@@ -112,6 +112,11 @@ jobs:
           Remove-Item -Path C:\moon\randomizer\client\assets\.gitignore -Force
           Remove-Item -Path C:\moon\randomizer\client\assets\.gitattributes -Force
           Remove-Item -Path C:\moon\randomizer\client\assets\.git -Force -Recurse
+      - name: Copy CRT
+        shell: pwsh
+        run: |
+          Copy-Item -Path $env:VCINSTALLDIR\Redist\MSVC\14.*\x64\Microsoft.VC*.CRT\msvcp140*.dll C:\moon\randomizer\client\
+          Copy-Item -Path $env:VCINSTALLDIR\Redist\MSVC\14.*\x64\Microsoft.VC*.CRT\vcruntime*.dll C:\moon\randomizer\client\
       - name: Archive randomizer
         uses: actions/upload-artifact@v6
         with:
