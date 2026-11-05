@@ -18,6 +18,10 @@ on:
         description: 'UI branch'
         required: true
         default: 'v5'
+      assets_branch:
+        description: 'Assets branch'
+        required: true
+        default: 'v5'
       seedgen_branch:
         description: 'Seedgen branch'
         required: true
@@ -105,7 +109,7 @@ jobs:
           copy resources\modloader_config.json C:\moon\randomizer\client\modloader_config.json
       - name: Clone ori-community/wotw-rando-assets
         run: |
-          git clone --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\client\assets
+          git clone --branch ${{ github.event.inputs.assets_branch || 'dev' }} --depth 1 https://github.com/ori-community/wotw-rando-assets.git C:\moon\randomizer\client\assets
           git -C C:\moon\randomizer\client\assets rev-parse HEAD > C:\moon\randomizer\versions\assets.revision
           git -C C:\moon\randomizer\client\assets lfs checkout
           Remove-Item -Path C:\moon\randomizer\client\assets\README.md -Force
