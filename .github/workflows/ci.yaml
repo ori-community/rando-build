@@ -45,6 +45,8 @@ jobs:
         uses: mozilla-actions/sccache-action@v0.0.11
       - name: Install CMake
         run: choco install cmake
+      - name: Upgrade LLVM
+        run: choco install llvm --upgrade --no-progress
       - name: Install Ninja
         run: choco install ninja
       - name: Enable Git support for long file paths
